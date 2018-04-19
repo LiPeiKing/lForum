@@ -13,5 +13,7 @@ class Post extends Model
 	    public $incrementing=false;
 	    // 不添加update_at字段
 	    public $timestamps = false;
+	    // 指定主键名字
+	    public $primaryKey = 'sPostID';
     
 }

@@ -24,18 +24,26 @@ textarea{
 }
 </style>
 
-<form class="layui-form" action="/post/search" method="post">
+<div class="demoTable">
 	<div class="layui-form-item">
-		<label class="layui-form-label">帖子名</label>
+	    <label class="layui-form-label">标题：</label>
 		<div class="layui-input-inline">
-			<input type="text" name="title" placeholder="请输入帖子名称" autocomplete="off" class="layui-input">
+			<input class="layui-input" name="sTitle" id="sTitle" autocomplete="off">
 		</div>
-		<label class="layui-form-label">作者</label>
+		<label class="layui-form-label">作者：</label>
 		<div class="layui-input-inline">
-			<input type="text" name="author" placeholder="请输入作者" autocomplete="off" class="layui-input">
+			<input class="layui-input" name="sAuthor" id="sAuthor" autocomplete="off">
 		</div>
-		<label class="layui-form-label">帖子类别</label>
-		<div class="layui-input-inline">
+		<button class="layui-btn" data-type="reload">搜索</button>
+	</div>
+</div>
+
+	<!-- <label class="layui-form-label">帖子名</label>
+	<div class="layui-input-inline">
+		<input type="text" name="title" id="sTitle" placeholder="请输入帖子名称" autocomplete="off" class="layui-input">
+	</div> -->
+	<!-- <label class="layui-form-label">帖子类别</label> -->
+		<!-- <div class="layui-input-inline">
 			<select name="type">
 				<option value=""></option>
 				<option value="0">web前端</option>
@@ -44,9 +52,10 @@ textarea{
 				<option value="3">服务器运维</option>
 				<option value="4">其他</option>
 			</select>
-		</div>
-		<button class="layui-btn" lay-submit lay-filter="search">查找</button>
-	</div>
+		</div> -->
+		<!-- <button class="layui-btn" data-type="reload">查找</button>
+		</div> -->
+
 	<!-- <table class="layui-table" lay-data="{height:315, url:'/table/post', page:true, id:'test'}" lay-filter="test">
 		<script type="text/html" id="barDemo">
 		    <a class="layui-btn layui-btn-primary layui-btn-mini" lay-event="detail">查看</a>
@@ -72,26 +81,24 @@ textarea{
 		<a class="layui-btn layui-btn-sm layui-btn-radius" lay-event="edit">编辑</a>
 		<a class="layui-btn layui-btn-sm layui-btn-radius layui-btn-danger" lay-event="del">删除</a>
 	</script>
-</form>
-<div class="layui-container" id="view" style="width: 700px;height: 480px;margin-top: 20px">
-   		<div class="layui-form-item">
-		    <label class="layui-form-label">帖子标题:</label>
-		    <div class="layui-input-inline">
-		      <input type="text" name="sTitle" id="sTitle" disabled class="layui-input">
-		    </div>
-		    <label class="layui-form-label">作者:</label>
-		    <div class="layui-input-inline">
-		      <input type="text" name="sAuthor" id="sAuthor" disabled class="layui-input">
-		    </div>
-	  	</div>
-	  	<div class="layui-form-item">
-		    <label class="layui-form-label">内容:</label>
-		    <div class="layui-col-md9">
-		      <textarea name="desc" id="sContent" disabled class="layui-textarea"></textarea>
-		    </div>
-	  	</div>
-</div>
 
+	<div class="layui-container" id="view" style="width: 700px;height: 480px;margin-top: 20px;display: none;">
+		<div class="layui-form-item">
+			<label class="layui-form-label">帖子标题:</label>
+			<div class="layui-input-inline">
+				<input type="text" name="sTitle" id="sTitle" disabled class="layui-input">
+			</div>
+			<label class="layui-form-label">作者:</label>
+			<div class="layui-input-inline">
+				<input type="text" name="sAuthor" id="sAuthor" disabled class="layui-input">
+			</div>
+		</div>
+		<div class="layui-form-item">
+			<label class="layui-form-label">内容:</label>
+			<div class="layui-col-md9">
+				<textarea name="desc" id="sContent" disabled class="layui-textarea"></textarea>
+			</div>
+		</div>
 
 <script type="text/javascript">
 	//主动加载jquery模块
@@ -112,9 +119,9 @@ textarea{
 	  //监听提交依赖模块table
 	  form.on('submit(search)', function(data){
 	  	// 取值
-	  	var title = data.field.title;
-	  	var author = data.field.author;
-	  	var type = data.field.type;
+	  	// var title = data.field.title;
+	  	// var author = data.field.author;
+	  	// var type = data.field.type;
 
 	  	// $.ajax({
 	  	// 	ype: 'POST',
@@ -144,21 +151,21 @@ textarea{
 	layui.use('table', function(){
 		var table = layui.table;
 		// 方法级渲染
-		table.render({
+		var tableIns = table.render({
 			elem: '#table_post'
 			,url: '/table/post'
 			,cols: [[
 			{checkbox: true, fixed: true}
-			,{field:'id', title: 'ID', width:290, sort: true, fixed: true}
-			,{field:'sTitlt', title: '帖子标题', width:200, sort: true}
-			,{field:'iType', title: '类别', width:150, sort: true,edit:true}
+			,{field:'sPostID', title: 'ID', width:290, sort: true, fixed: true}
+			,{field:'sTitle', title: '帖子标题', width:200}
+			,{field:'iType', title: '类别', width:150}
 			,{field:'sAuthor', title: '作者', width:150}
 			,{field:'dCreateTime', title: '创建时间', width:100}
-			,{field:'right', title: '操作', width:177,toolbar:"#barDemo"}
+			,{field:'right', title: '操作', width:200,toolbar:"#barDemo"}
 			]]
 			,id: 'testReload'
 			,page: true
-			,height: 600
+			,height: 388
 		});
         // 监听表格复选框
         table.on('checkbox(useruv)', function(obj){
@@ -169,35 +176,85 @@ textarea{
         	$ = layui.$;
         	var data = obj.data;
         	console.log(data);
-        	$("#sTitle").val(data.sTitle);
-        	$("#sAuthor").val(data.sAuthor);
-        	$("#sContent").text(data.sContent);
+        	// 绑定显示页面的数据
+        	$("#view #sTitle").val(data.sTitle);
+        	$("#view #sAuthor").val(data.sAuthor);
+        	$("#view #sContent").text(data.sContent);
         	if(obj.event === 'view'){
         		layer.open({
-				  type: 1,
-				  title: false,
-				  closeBtn: 0,
-				  area: ['700px', '500px'],
-				  scrollbar: false,
-				  shadeClose: true,
-				  scrollbar: false,
-				  content: $("#view"),
-				  success:function(layero){  
-					     var mask = $(".layui-layer-shade");  
-					     mask.appendTo(layero.parent());  
-					     //其中：layero是弹层的DOM对象  
-					     // $(layero).addClass("scroll-wrapper");
-					} 
-				});
+        			type: 1,
+        			title: false,
+        			closeBtn: 0,
+        			area: ['700px', '500px'],
+        			scrollbar: false,
+        			shadeClose: true,
+        			scrollbar: false,
+        			content: $("#view"),
+        			success:function(layero){  
+        				var mask = $(".layui-layer-shade");  
+        				mask.appendTo(layero.parent());  
+        			} 
+        		});
         	} else if(obj.event === 'del'){
-        		layer.confirm('真的删除行么', function(index){
+        		layer.confirm('确定删除这条数据么',{ icon: 3}, function(index){
+        			console.log(data.sPostID);
+        			var id = data.sPostID;
+        			$.ajax({
+        				type:'POST',
+        				url:'/post/del',
+        				data:'{"id":"'+id+'"}',
+        				contentType:"application/json",
+        				headers: {
+        					'X-CSRF-TOKEN': $('meta[name="token"]').attr("content")
+        				},
+        				success:function(data){
+        					console.log(data);
+        					if(data == 1){
+        						obj.del();
+        						tableIns.reload();
+        						layer.msg("删除成功", { icon: 6, time: 2000 });
+        					}else{
+        						layer.msg("删除失败！", { icon: 5, time: 2000 });
+
+        					}
+        				},
+        				error:function(data){
+        						// console.log(data);
+        						layer.msg("删除失败！", { icon: 5, time: 2000 });
+        					}
+        				});
 
         			layer.close(index);
         		});
         	} else if(obj.event === 'edit'){
-        		layer.alert('编辑行：<br>'+ JSON.stringify(data))
+        		// layer.alert('编辑行：<br>'+ JSON.stringify(data))
+        		layer.alert("由于设计原因，编辑功能暂时为保留功能。",{icon: 4});
         	}
         });
+
+        // 查询
+        var $ = layui.$, active = {
+        	reload: function(){
+        		var sTitle = $('#sTitle').val();
+        		var sAuthor = $('#sAuthor').val();
+
+
+        		table.reload('testReload', {
+        			where: {
+        				sTitle: sTitle,
+        				sAuthor:sAuthor
+        			}
+        		});
+        	}
+        };
+
+        $('.demoTable .layui-btn').on('click', function(){
+        	// alert("11");
+        	var type = $(this).data('type');
+        	active[type] ? active[type].call(this) : '';
+        });
+
+
     });
 </script>
 @endsection

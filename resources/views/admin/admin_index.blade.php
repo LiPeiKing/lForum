@@ -47,9 +47,9 @@
 	        <li class="layui-nav-item" id="content">
 	          <a href="javascript:;">内容管理</a>
 	          <dl class="layui-nav-child">
-	            <dd><a href="/postList" >帖子管理</a></dd>
-	            <dd><a href="javascript:;" value="huifuList.html">回复管理</a></dd>
-	            <dd><a href="javascript:;" value="tieziRecycle.html ">帖子回收站</a></dd>
+	            <dd><a href="/postList">帖子管理</a></dd>
+	            <dd><a href="/reply">回复管理</a></dd>
+	            <dd><a href="/postRecycle">帖子回收站</a></dd>
 	          </dl>
 	        </li>
 	        <li class="layui-nav-item ">

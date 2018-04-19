@@ -36,17 +36,17 @@ class UserInfoController extends Controller
 
 	//绑定数据
 	public function bind(Request $request){
-		$id = $request->session()->get("id");
+		$id = $request->session()->get("sUserID");
 		$user = UserInfo::find($id);
 		return view('admin.admin_basicInfo',['user' => $user]);
 	} 
 
 	// 退出登录
 	public function logout(Request $request){
-		$request->session()->forget("id");
-		$request->session()->flush("id");
-		$request->session()->forget("username");
-		$request->session()->flush("username");
+		$request->session()->forget("sUserID");
+		$request->session()->flush("sUserID");
+		$request->session()->forget("sLoginName");
+		$request->session()->flush("sLoginName");
 		return view('admin.admin_login');
 	}
 }

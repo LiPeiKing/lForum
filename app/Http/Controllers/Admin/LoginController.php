@@ -22,7 +22,7 @@ class LoginController extends Controller
     		if(!empty($user)){
     			if($user->sPassword == $request->input('logpassword')){
     				$request->session()->put('sLoginName',$request->input('logname'));
-                    $request->session()->put('id',$user->id);
+                    $request->session()->put('sUserID',$user->sUserID);
 
     				return view('admin.admin_index');
     			}else{

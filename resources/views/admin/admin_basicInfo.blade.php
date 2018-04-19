@@ -23,7 +23,7 @@
 				<div class="layui-form-item">
 					<label class="layui-form-label">性别</label>
 					<div class="layui-input-block">
-						<select name="sex" lay-verify="required">
+						<select name="sex" id="select" lay-verify="required">
 							<option value="男">男</option>
 							<option value="女">女</option>
 						</select>
@@ -42,7 +42,7 @@
 					</div>
 	
 				</div>
-				<input type="hidden" name="id" id="id" value="{{$user->id}}">
+				<input type="hidden" name="id" id="id" value="{{$user->sUserID}}">
 				<input type="hidden" name="sex" id="sex" value="{{$user->sSex}}">
 				<div class="layui-form-item">
 					<div class="layui-input-block">
@@ -61,42 +61,46 @@
 // 处理绑定下拉列表
 
 //主动加载jquery模块
-layui.use(['jquery', 'layer'], function(){ 
-  var $ = layui.$ //重点处
-  ,layer = layui.layer;
+// layui.use(['jquery', 'layer'], function(){ 
+//   var $ = layui.$ //重点处
+//   ,layer = layui.layer;
   
-  //后面就跟你平时使用jQuery一样
+//   //后面就跟你平时使用jQuery一样
   
-  	var sex = $("input[name='sex']").val();
-	if(sex=="男"){
-		$("select").find("option:contains('男')").attr("selected",true);
-	}else{
-		$("select").find("option:contains('女')").attr("selected",true);
-	}
+//   	var sex = $("input[name='sex']").val();
+//   	console.log(sex);
+
+// 	if(sex=="男"){
+// 		$("select").find("option:contains('男')").attr("selected",true);
+// 	}else{
+// 		$("select").find("option:contains('女')").attr("selected",true);
+// 	}
 
 
-});
+// });
 
 //Demo
 layui.use('form', function(){
   var form = layui.form;
   $ = layui.jquery;
 
-
-
+  var sex = $("input[name='sex']").val();
+  console.log(sex);
+  $("#select").val(sex);
+  form.render('select');
 
 
   //监听提交
   form.on('submit(formDemo)', function(data){
   	var username = data.field.username;
-  	var sex = data.field.sex;
+  	var sex = $(".layui-anim .layui-this").text();
   	var tel = data.field.tel;
   	var email = data.field.email;
   	var id = $("#id").val();
-  	// alert(id);
-  	// alert(data.field.sex);
+  	
+  	// alert(sex);
+  	// console.log(sex);
 
-  		// email = ;
    $.ajax({
     	type: 'POST',
     	url: '/ajax/edit',
