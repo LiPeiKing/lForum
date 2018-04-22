@@ -19,7 +19,19 @@ Route::get('/front/login',function(){
 	return view('front.front_login');
 });
 // 用户名密码登录
-Route::post('/fornt/check','');
+Route::post('/front/check','Front\CheckController@check');
+// 注册
+Route::get('/front/register',function(){
+	return view('front.front_registor');
+});
+// 注册保存
+Route::post('/registor','Front\CheckController@edit');
+
+
+// Route::post('/front/check',function(){
+// 	return view('front.front_index');
+// });
+
 
 
 
