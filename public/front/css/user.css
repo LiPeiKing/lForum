@@ -1,0 +1,67 @@
+
+/*======= 表单 =======*/
+.login-box form{
+	position: relative;
+}
+.form-inline{
+	position: relative;
+	display: block;
+}
+.form-inline + .form-inline{
+	margin-top: 10px;
+}
+.form-inline > div{
+	height: 40px;
+	line-height: 40px;
+}
+.form-inline-font{
+	position: absolute;
+	left: 0;
+	width: 110px;
+	padding-right: 10px;
+	font-family: "Arial";
+	font-size: 15px;
+	text-align: right;
+}
+.form-inline-input{
+	padding-left: 110px;
+}
+.form-inline-input input,
+.code-box{
+	padding: 0 10px;
+    width: 335px;
+    height: 35px;
+    color: #fff;
+    text-shadow: 1px 1px 1px black;
+    background: rgba(193, 193, 193, 0.8);
+    border: 0;
+    border-radius: 5px;
+	outline: none;
+	box-shadow: inset 0 0px 4px rgba(0, 0, 0, 0.3);
+}
+.code-box{
+	position: relative;
+}
+.code-box p,
+.code-box span{
+	display:block;
+	position: absolute;
+	left: 0;
+	height: 35px;
+	text-align: center;
+	line-height: 35px;
+	border-radius: 5px;
+	box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.06);
+}
+.code-box span{
+	width: 35px;
+	background-color:#fff;
+	font-family: "宋体";
+	font-size: 16px;
+	cursor: pointer;
+}
+
+.code-box .code-input{
+	display: none;
+}
+

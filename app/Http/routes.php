@@ -12,15 +12,29 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('front.front_index');
 });
+// 前台页面路由
+Route::get('/front/login',function(){
+	return view('front.front_login');
+});
+// 用户名密码登录
+Route::post('/fornt/check','');
 
-// 后台路由
+
+
+
+
+// -----------------------------------------------------------------------------
+
+
+// 后台页面路由
 Route::get('admin_login',function(){
 	return view('admin.admin_login');
 });
 // 验证用户名密码
 Route::post('/admin/login','Admin\LoginController@check');
+// Route::get('/admin/login','Admin\LoginController@check');
 
 // 管理员基本信息填写
 Route::get('/basicInfo','Admin\UserInfoController@bind');
@@ -73,3 +87,25 @@ Route::post('/recycle/restore','Admin\PostController@recycleRestore');
 
 // 用户管理
 
+// 普通用户管理
+Route::get('/common','Admin\CommonController@store');
+// 数据填充
+Route::get('/common/table','Admin\CommonController@table');
+// 删除数据
+Route::post('/common/del','Admin\CommonController@del');
+
+// 黑名单管理
+// 初始化
+Route::get('/blackList','Admin\BlackListController@store');
+// 填充数据
+Route::get('/blackList/table','Admin\BlackListController@table');
+// 删除数据
+Route::post('/blackList/restore','Admin\BlackListController@restore');
+
+// 管理员用户管理
+// 初始化
+Route::get('/manager','Admin\ManagerController@store');
+// 数据填充
+Route::get('/manager/table','Admin\ManagerController@table');
+// 管理员添加
+Route::post('/manager/edit','Admin\ManagerController@edit');

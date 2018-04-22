@@ -47,8 +47,7 @@ class ReplyController extends Controller
 							->skip($limit*($page-1))
 							->take($limit)
 							->count();
-			}
-			
+			}	
 		}else{
 			if(empty($sPostTitle)){
 				$data=$model::where('iDelete','!=','1')
