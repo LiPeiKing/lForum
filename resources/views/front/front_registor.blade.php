@@ -1,6 +1,6 @@
 @extends('front.front_index')
 
-@section('content')
+@section('cantainer')
 
 <style type="text/css">
 	.text-center{
@@ -17,7 +17,7 @@
 	<div class="alert alert-success hidden" role="alert" id="success">
 		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 		注册成功了哟！
-	  	<a href="" class="alert-link">点击去登录！</a>
+	  	<a href="/front/login" class="alert-link">点击去登录！</a>
 	</div>
 	<div class="panel panel-success" id="panel">
 		<div class="panel-heading"><h2 class="panel-title">欢迎注册</h2></div>

@@ -1,6 +1,6 @@
 @extends('front.front_index')
 
-@section('content')
+@section('cantainer')
 
 <style type="text/css">
 	.text-center{
@@ -61,6 +61,33 @@
 
 <script type="text/javascript">
 	$(function(){
+		// 表单验证
+		$("#loginForm").bootstrapValidator({
+			message: 'This value is not valid',
+	        feedbackIcons: {
+	            // valid: 'glyphicon glyphicon-ok',
+	            invalid: 'glyphicon glyphicon-remove',
+	            validating: 'glyphicon glyphicon-refresh'
+	        },
+	        fields:{
+	        	sLoginName:{
+	        		validators: {
+	                    notEmpty: {
+	                        message: '用户名不能为空!'
+	                    }
+	                }
+	        	},
+	        	sPassword:{
+	        		validators: {
+	                    notEmpty: {
+	                        message: '密码不能为空！'
+	                    }
+	                }
+	        	}
+	        }
+		});
+
+
 		// 提示框显示
 		var msg = $("#msg").val();
 		// alert(msg);

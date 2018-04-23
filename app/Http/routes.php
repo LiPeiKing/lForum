@@ -27,10 +27,21 @@ Route::get('/front/register',function(){
 // 注册保存
 Route::post('/registor','Front\CheckController@edit');
 
+// 登陆后操作路由
 
-// Route::post('/front/check',function(){
-// 	return view('front.front_index');
-// });
+// 个人中心
+
+// 编辑个人资料
+Route::get('/edit/info','Front\UserInfoController@store');
+
+// 个人信息提交
+Route::post('/edit/edit','Front\UserInfoController@edit');
+
+// Route::get('/edit/edit','Front\UserInfoController@edit');
+// 修改密码
+Route::get('/edit/password','Front\UserInfoController@storePassword');
+// 保存密码
+Route::post('/save/password','Front\UserInfoController@savePassword');
 
 
 

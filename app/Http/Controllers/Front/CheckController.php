@@ -20,21 +20,23 @@ class CheckController extends Controller
     public function check(Request $request){
     	$sLoginName = $request->sLoginName;
     	$sPassword = $request->sPassword;
-    	$msg = '456';
-    	// if(!empty($sPassword)){
-    	// 	$msg = $sPassword;
-    	// 	return view('front.front_login',['msg' => $msg]);
-    	// }else{
-    	// 	$msg = "密码不为空！";
-    	// 	return view('front.front_login',['msg' => $msg]);
-    	// }
+    	$msg = '';
     	$users = UserInfo::where('sLoginName',$sLoginName)
     					 ->first();
     	if(!empty($users)){
     		if($users->sPassword == $sPassword){
     			// 登录成功
-    			$msg = "1";
-    			return view('front.front_login',['msg' => $msg]);
+    			// 是否是注册成功第一次登陆
+    			if($users->sAlias == '0'){
+    				$request->session()->put('sLoginName',$users->sLoginName);
+    				$request->session()->put('sRole','普通用户');
+
+    				return view('front.front_userInfo');
+    			}else{
+    				$msg = "1";
+    				return view('front.front_login',['msg' => $msg]);
+    			}
+    			
     		}else{
     			// 密码错误
     			$msg = "2";
@@ -55,6 +57,7 @@ class CheckController extends Controller
     	$users->sLoginName = $request->sLoginName;
     	$users->sPassword = $request->sPassword;
     	$users->iState = "0";
+    	$users->sAlias = '0';
     	$users->sEmail = $request->sEmail;
     	if($users->save()){
     		$msg = "1";
