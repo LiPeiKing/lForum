@@ -38,13 +38,19 @@ class UserInfoController extends Controller
     	$users = UserInfo::where('sLoginName',$sLoginName)->first();
 
     	if(!empty($users)){
-    		if($users->sUserName == $sUserName){
-    			if($users->sChangeName == '1'){
+    		// if($users->sUserName == $sUserName){
+    		// 	if($users->sChangeName == '1'){
+	    	// 		$users->sChangeName = '1';
+    		// 	}
+	    	// 	$users->sChangeName = '0';
+	    	// }else{
+	    	// 	$users->sChangeName = '1';
+	    	// }
+
+	    	if($users->sChangeName != '1'){
+	    		if($users->sUserName != $sUserName){
 	    			$users->sChangeName = '1';
-    			}
-	    		$users->sChangeName = '0';
-	    	}else{
-	    		$users->sChangeName = '1';
+	    		}
 	    	}
     		$users->sUserName = $sUserName;
 	    	$users->sSex = $sSex;
@@ -93,5 +99,15 @@ class UserInfoController extends Controller
     	}else{
     			return 0;
     	}
+    }
+
+    // 退出登录
+
+    public function logout(Request $request){
+    	$request->session()->forget("sUserID");
+		$request->session()->flush("sUserID");
+		$request->session()->forget("sLoginName");
+		$request->session()->flush("sLoginName");
+		return view('front.front_login');
     }
 }

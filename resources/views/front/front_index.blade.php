@@ -6,13 +6,18 @@
 </head>
 <meta name="token" content="{{ csrf_token() }}"/>
 <link rel="stylesheet" href="{{asset('./front/css/bootstrap.min.css')}}">
-
+<link rel="stylesheet" type="text/css" href="{{asset('./front/css/jquery-confirm.css')}}">
 <link rel="stylesheet" href="{{asset('./front/css/bootstrapValidator.min.css')}}">
 <link rel="stylesheet" href="{{asset('./front/css/main.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('./front/dist/summernote.css')}}">
 
 <script src="{{asset('./front/js/jquery-3.2.1.min.js')}}"></script>
 <script src="{{asset('./front/js/bootstrap.min.js')}}"></script>
 <script src="{{asset('./front/js/bootstrapValidator.min.js')}}"></script>
+<script src="{{asset('./front/js/jquery-confirm.js')}}"></script>
+<script src="{{asset('./front/dist/summernote.js')}}"></script>
+<script src="{{asset('./front/dist/lang/summernote-zh-CN.js')}}"></script>
+
 
 <style type="text/css">
 	.media-object{
@@ -215,12 +220,8 @@
 				</div>
 			@show
 		</div>
-		
 
 	</div>
-
-
-
 
 </body>
 

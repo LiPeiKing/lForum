@@ -30,6 +30,8 @@ class CheckController extends Controller
     			if($users->sAlias == '0'){
     				$request->session()->put('sLoginName',$users->sLoginName);
     				$request->session()->put('sRole','普通用户');
+                    $request->session()->put('sUserID',$users->sUserID);
+                    $request->session()->put('sUserName',$users->sUserName);
 
     				return view('front.front_userInfo');
     			}else{

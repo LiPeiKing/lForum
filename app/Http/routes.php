@@ -18,6 +18,8 @@ Route::get('/', function () {
 Route::get('/front/login',function(){
 	return view('front.front_login');
 });
+// 前台首页
+// Route::get('/index','Front\CheckController@check');
 // 用户名密码登录
 Route::post('/front/check','Front\CheckController@check');
 // 注册
@@ -30,6 +32,9 @@ Route::post('/registor','Front\CheckController@edit');
 // 登陆后操作路由
 
 // 个人中心
+Route::get('/personal/center',function(){
+	return view('front.front_personal');
+});
 
 // 编辑个人资料
 Route::get('/edit/info','Front\UserInfoController@store');
@@ -43,7 +48,19 @@ Route::get('/edit/password','Front\UserInfoController@storePassword');
 // 保存密码
 Route::post('/save/password','Front\UserInfoController@savePassword');
 
+// 退出登录
+Route::get('/front/logout','Front\UserInfoController@logout');
 
+
+// -----------------------------------------------------------------------------
+// 发帖
+Route::get('/topics/create','Front\PostController@store');
+// 保存
+Route::post('/topics/save','Front\PostController@save');
+// 分相链接
+Route::get('/links/share','Front\PostController@linksStore');
+// 保存链接
+Route::post('/links/save','Front\PostController@linksSave');
 
 
 

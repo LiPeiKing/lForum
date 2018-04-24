@@ -8,6 +8,9 @@
 }
 </style>
 <li class="text-center">
+	<a href="javascript:;" type="button">首页</a>
+</li>
+<li class="text-center">
 	<a href="#" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dLabel">
 		<img class="img-rounded" id="head" alt="liking" src="{{asset('./front/images/caomei.jpg')}}">
 		{{Session::get('sLoginName')}}
@@ -25,7 +28,7 @@
 			</a>
 		</li>
 		<li class="text-center">
-			<a id="login-out" class="button" href="/front/logout">
+			<a id="logout" class="button" href="javascript:;">
 				<i class="glyphicon glyphicon-log-out"></i>&nbsp;&nbsp;&nbsp;&nbsp;退出登陆
 			</a>
 		</li>
@@ -36,12 +39,39 @@
 @section('side')
 <div class="panel panel-default">
 	<div class="panel-body text-center">
-		<a style="margin: 8px;" class="btn btn-default" href="https://laravel-china.org/topics/create">
-            <i class="fa fa-comment text-md"></i> 发起讨论
+		<a style="margin: 4px;" class="btn btn-default" href="/topics/create">
+            <i class="glyphicon glyphicon-pencil"></i> 发起讨论
         </a>
-        <a style="margin: 8px;" class="btn btn-default" href="https://laravel-china.org/links/share">
-            <i class="fa fa-link text-md"></i> 分享链接
+        <a style="margin: 4px;" class="btn btn-default" href="/links/share">
+            <i class="glyphicon glyphicon-share"></i> 分享链接
         </a>
+        
 	</div>
 </div>
+
+
+
+@endsection
+
+@section('script')
+	
+<script>
+	$(function(){
+		$("#logout").on('click',function(){
+			$.confirm({
+			    title: '提示：',
+			    content:'您确定退出登录么？',
+			    // offsetBottom:'10px',
+			    buttons: {
+			        确定: function () {
+			            location.href = "/front/logout";
+			        },
+			        取消: function () {
+			        }
+			    }
+			});
+		})
+	});
+</script>
+	
 @endsection

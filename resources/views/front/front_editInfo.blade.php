@@ -163,28 +163,6 @@
 	</div>
 </div>
 
-<!-- 提示模态框 -->
-
-<div class="modal fade bs-example-modal-sm" id="success" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-  <div class="modal-dialog modal-sm" role="document">
-    <div class="modal-content">
-		<div class="modal-body text-center">
-			<h5><i class="glyphicon glyphicon-ok" style="color: green;margin-right: 20px;"></i>修改成功！</h5>
-		</div>
-    </div>
-  </div>
-</div>
-<div class="modal fade bs-example-modal-sm" id="error" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
-  <div class="modal-dialog modal-sm" role="document">
-    <div class="modal-content">
-		<div class="modal-body text-center">
-			<h5><i class="glyphicon glyphicon-remove" style="color: red;margin-right: 20px;"></i>修改失败！</h5>
-		</div>
-    </div>
-  </div>
-</div>
-
-
 <!--  -->
 <script type="text/javascript">
 	$(function(){
@@ -263,15 +241,23 @@
 
 						if(data == 1){
 							
-
-							$('#success').modal('toggle');
+							$.dialog({
+								title:'',
+							    content: '<div style="text-align:center">修改成功！</div>',
+							});
 						}else{
-							$('#error').modal('toggle');
+							$.dialog({
+								title:'',
+							    content: '<div style="text-align:center">修改失败！</div>',
+							});
 
 						}
 					},
 					error: function(xhr, type){
-						$('#error').modal('toggle');
+						$.dialog({
+								title:'',
+							    content: '<div style="text-align:center">修改失败！</div>',
+							});
 					}
 			    });
         	}
