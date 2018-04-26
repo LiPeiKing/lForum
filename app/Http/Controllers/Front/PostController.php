@@ -22,13 +22,19 @@ class PostController extends Controller
     // 保存帖子信息
     public function save(Request $request){
     	$sContent = $request->sContent;
-    	$sTitle = $request->sTitle;
+        $sTitle = $request->sTitle;
+    	// $sTitle = $request->sTitle;
     	$sPostTypeID = $request->sTypeID;
+
+        // return $sTitle;
     	if(!empty($sTitle)){
+
+
     		$posts = new Post;
 
     		$posts->sPostID = Uuid::uuid1();
     		$posts->sPostTypeID = $sPostTypeID;
+    		$posts->sUserID = $request->session()->get('sUserID');
     		$posts->sTitle = $sTitle;
     		$posts->sContent = $sContent;
     		$posts->sAuthor = $request->session()->get('sUserName');
@@ -38,7 +44,7 @@ class PostController extends Controller
     		if($posts->save()){
     			return 1;
     		}else{
-    			return 0;
+    			return 2;
     		}
 
     	}else{
@@ -61,6 +67,8 @@ class PostController extends Controller
 
     		$posts->sPostID = Uuid::uuid1();
     		// $posts->sPostTypeID = $sPostTypeID;
+            $posts->sUserID = $request->session()->get('sUserID');
+            
     		$posts->sTitle = $sTitle;
     		$posts->sContent = $sContent;
     		$posts->sAuthor = $request->session()->get('sUserName');

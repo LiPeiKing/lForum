@@ -33,7 +33,7 @@ class CheckController extends Controller
                     $request->session()->put('sUserID',$users->sUserID);
                     $request->session()->put('sUserName',$users->sUserName);
 
-    				return view('front.front_userInfo');
+    				return view('front.front_index');
     			}else{
     				$msg = "1";
     				return view('front.front_login',['msg' => $msg]);

@@ -53,6 +53,10 @@
 	.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover{
 		background-color:#ffffff;
 	}
+	#head{
+		width: 20px;
+		margin-top: 1px;
+	}
 </style>
 <body  style=" overflow:scroll">
 	<!-- 导航栏 -->
@@ -83,11 +87,38 @@
 					</div>
 				</form>
 				<ul class="nav navbar-nav navbar-right">
-					@section('nav')
 					<li class="text-center"><a href="/">首页</a></li>
-					<li class="text-center"><a href="/front/login">登录</a></li>
-					<li class="text-center"><a href="/front/register">注册</a> </li>
-					@show
+
+					@if(Session::get('sLoginName') == null)
+						<li class="text-center"><a href="/front/login">登录</a></li>
+						<li class="text-center"><a href="/front/register">注册</a> </li>
+					@else 
+						<li class="text-center">
+							<a href="#" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dLabel">
+								<img class="img-rounded" id="head" alt="liking" src="{{asset('./front/images/caomei.jpg')}}">
+								{{Session::get('sLoginName')}}
+								<span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu" aria-labelledby="dLabel">
+								<li class="text-center">
+									<a class="button" href="/personal/center">
+										<i class="glyphicon glyphicon-user"></i>&nbsp;&nbsp;&nbsp;&nbsp;个人中心
+									</a>
+								</li>
+								<li class="text-center">
+									<a class="button" href="/edit/info">
+										<i class="glyphicon glyphicon-cog"></i>&nbsp;&nbsp;&nbsp;&nbsp;编辑资料
+									</a>
+								</li>
+								<li class="text-center">
+									<a id="logout" class="button" href="javascript:;">
+										<i class="glyphicon glyphicon-log-out"></i>&nbsp;&nbsp;&nbsp;&nbsp;退出登陆
+									</a>
+								</li>
+							</ul>
+						</li>
+					@endif
+					
 				</ul>
 			</div><!-- /.navbar-collapse -->
 		</div><!-- /.container-fluid -->
@@ -140,16 +171,26 @@
 
 							</ul>
 						</div>
-
 					</div>
-
 					<div class="clearfix"></div>
 				</div>
 				@show
 
 				<div class="col-md-3">
-					@section('side')
-					@show
+					@if(Session::get('sLoginName') != null)
+						<div class="panel panel-default">
+							<div class="panel-body text-center">
+								<a style="margin: 4px;" class="btn btn-default" href="/topics/create">
+						            <i class="glyphicon glyphicon-pencil"></i> 发起讨论
+						        </a>
+						        <a style="margin: 4px;" class="btn btn-default" href="/links/share">
+						            <i class="glyphicon glyphicon-share"></i> 分享链接
+						        </a>
+						        
+							</div>
+						</div>
+					@endif
+
 					<div class="panel panel-default">
 						<div class="panel-heading text-center" style="background-color: #ffffff !important;">
 							<h3 class="panel-title">友情链接</h3>
@@ -224,7 +265,24 @@
 	</div>
 
 </body>
-
+<script>
+	$(function(){
+		$("#logout").on('click',function(){
+			$.confirm({
+			    title: '提示：',
+			    content:'您确定退出登录么？',
+			    // offsetBottom:'10px',
+			    buttons: {
+			        确定: function () {
+			            location.href = "/front/logout";
+			        },
+			        取消: function () {
+			        }
+			    }
+			});
+		})
+	});
+</script>
 @section('script')
 
 @show

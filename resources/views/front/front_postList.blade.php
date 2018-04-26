@@ -147,36 +147,7 @@ span.timeago {
 	</div>
 
 
-	<div class="panel panel-default">
-		<div class="panel-heading text-center" style="background-color: #ffffff !important;">
-			<i class="glyphicon glyphicon-share" aria-hidden="true"></i> 最近分享的链接
-		</div>
 
-		<div class="panel-body">
-			@if($linkNum == 0)
-				<div class="empty-block">还未留下任何评论~~</div>
-			@else 
-				<ul class="list-group">
-					@foreach($links as $link)
-					<li class="list-group-item"> 
-						<a href="javascript:;" title="{{$link->sTitle}}" class="">
-							{{$link->sTitle}}
-						</a>
-						<span class="meta pull-right">
-				            <i class="glyphicon glyphicon-tag"></i>
-					        <span>链接</span>
-					        <i class="glyphicon glyphicon-thumbs-up"></i>
-					        <span> {{$post->iPraise or '1'}} &nbsp;</span>
-					        <i class="glyphicon glyphicon-calendar"></i>
-
-					        <span class="timeago">{{$post->dCreateTime}}</span>
-					    </span>
-					</li>
-					@endforeach
-				</ul>
-			@endif
-		</div>
-	</div>
 
 </div>
 @endsection

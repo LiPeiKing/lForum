@@ -100,8 +100,8 @@
 		var sContent = $('#summernote').summernote('code');
 		var sTitle = $("#sTitle").val();
 		var sTypeID = $("select option:selected").val();
-		console.log(sTypeID);
-		console.log(sTitle);
+		// console.log(sTypeID);
+		// console.log(sTitle);
 
 		if(bv.isValid()){
 			$.ajax({
@@ -113,6 +113,7 @@
 					'X-CSRF-TOKEN': $('meta[name="token"]').attr("content")
 				},
 				success: function(data){
+					console.log(data);
 					if(data == 1){
 						$.dialog({
 							title:'',

@@ -119,39 +119,8 @@ span.timeago {
 <div class="col-md-9">
 	<div class="panel panel-default">
 		<div class="panel-heading text-center" style="background-color: #ffffff !important;">
-			<i class="glyphicon glyphicon-pencil" aria-hidden="true"></i> 最近发起的讨论
-		</div>
-		<div class="panel-body">
-			@if($postNum == 0)
-				<div class="empty-block">没有任何数据~~</div>
-			@else
-				<ul class="list-group">
-					@foreach($posts as $post)
-					<li class="list-group-item"> 
-						<a href="/personal/post/{{$post->sPostID}}" title="{{$post->sTitle}}" class="">
-							{{$post->sTitle}}
-						</a>
-						<span class="meta pull-right">
-				            <i class="glyphicon glyphicon-tag"></i>
-					        <span> {{$post->sName}}&nbsp;</span>
-					        <i class="glyphicon glyphicon-thumbs-up"></i>
-					        <span> {{$post->iPraise or '1'}} &nbsp;</span>
-					        <i class="glyphicon glyphicon-calendar"></i>
-					        <span class="timeago">{{$post->dCreateTime}}</span>
-					    </span>
-					</li>
-					@endforeach
-				</ul>
-			@endif
-		</div>
-	</div>
-
-
-	<div class="panel panel-default">
-		<div class="panel-heading text-center" style="background-color: #ffffff !important;">
 			<i class="glyphicon glyphicon-share" aria-hidden="true"></i> 最近分享的链接
 		</div>
-
 		<div class="panel-body">
 			@if($linkNum == 0)
 				<div class="empty-block">还未留下任何评论~~</div>
@@ -166,10 +135,10 @@ span.timeago {
 				            <i class="glyphicon glyphicon-tag"></i>
 					        <span>链接</span>
 					        <i class="glyphicon glyphicon-thumbs-up"></i>
-					        <span> {{$post->iPraise or '1'}} &nbsp;</span>
+					        <span> {{$link->iPraise or '1'}} &nbsp;</span>
 					        <i class="glyphicon glyphicon-calendar"></i>
 
-					        <span class="timeago">{{$post->dCreateTime}}</span>
+					        <span class="timeago">{{$link->dCreateTime}}</span>
 					    </span>
 					</li>
 					@endforeach
@@ -177,6 +146,7 @@ span.timeago {
 			@endif
 		</div>
 	</div>
+
 
 </div>
 @endsection

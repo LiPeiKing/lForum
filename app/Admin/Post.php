@@ -15,5 +15,10 @@ class Post extends Model
 	    public $timestamps = false;
 	    // 指定主键名字
 	    public $primaryKey = 'sPostID';
+
+	    // 定义级联
+	    public function postType(){
+	    	return $this->hasOne('App\Admin\PostType','id','sPostTypeID');
+	    }
     
 }

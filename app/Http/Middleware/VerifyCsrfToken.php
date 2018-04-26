@@ -13,6 +13,7 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = [
         //排除路由
-        '/admin/login'
+        '/admin/login',
+        '/front/check'
     ];
 }

@@ -32,22 +32,31 @@ Route::post('/registor','Front\CheckController@edit');
 // 登陆后操作路由
 
 // 个人中心
-Route::get('/personal/center',function(){
-	return view('front.front_personal');
-});
+Route::get('/personal/center','Front\PersonalController@store');
+// 帖子列表
+Route::get('/personal/postsList','Front\PersonalController@postsList');
+// 链接列表
+Route::get('/personal/linksList','Front\PersonalController@linksList');
+// 查看个人post
+Route::get('/personal/post/{sPostID}','Front\PersonalController@postView');
 
+
+
+// -------------------------------------
 // 编辑个人资料
 Route::get('/edit/info','Front\UserInfoController@store');
 
 // 个人信息提交
 Route::post('/edit/edit','Front\UserInfoController@edit');
 
+// --------------------------------------	
 // Route::get('/edit/edit','Front\UserInfoController@edit');
 // 修改密码
 Route::get('/edit/password','Front\UserInfoController@storePassword');
 // 保存密码
 Route::post('/save/password','Front\UserInfoController@savePassword');
 
+// --------------------------------------
 // 退出登录
 Route::get('/front/logout','Front\UserInfoController@logout');
 
