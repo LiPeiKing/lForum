@@ -15,18 +15,24 @@ class PostController extends Controller
 {
     //发帖页面初始化
     public function store(Request $request){
-    	$postTypes = PostType::all();
-    	return view('front.front_editPost',['postTypes' => $postTypes]);
+        $sPostID = $request->route('sPostID');
+        if(!empty($sPostID)){
+            $posts = Post::find($sPostID);
+            $postTypes = PostType::all();
+            return view('front.front_editPost',['postTypes' => $postTypes,'posts' => $posts]);
+        }else{
+            $postTypes = PostType::all();
+            return view('front.front_editPost',['postTypes' => $postTypes]);
+        }
     }
 
     // 保存帖子信息
     public function save(Request $request){
     	$sContent = $request->sContent;
         $sTitle = $request->sTitle;
-    	// $sTitle = $request->sTitle;
     	$sPostTypeID = $request->sTypeID;
+        $sContent = htmlspecialchars($sContent);
 
-        // return $sTitle;
     	if(!empty($sTitle)){
 
 

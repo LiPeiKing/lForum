@@ -45,10 +45,12 @@ class PersonalController extends Controller
 	    // 讨论数量
     	$postNum = Post::where('sUserID',$sUserID)
     					->where('iType','=','1')
+                        ->where('iDelete','=','0')
     					->count();
     	// 链接数
     	$linkNum = Post::where('sUserID',$sUserID)
     					->where('iType','=','2')
+                        ->where('iDelete','=','0')
     					->count();
     	// 帖子
     	// $posts = Post::where('sUserID',$sUserID)
@@ -56,6 +58,7 @@ class PersonalController extends Controller
     	// 			 ->get();
     	// 链接
     	$links = Post::where('sUserID',$sUserID)
+                    ->where('iDelete','=','0')
     				 ->where('iType','=','2')
     				 ->get();
     	
@@ -66,6 +69,7 @@ class PersonalController extends Controller
     				->select('post.*','posttype.sName')
     				->where('sUserID',$sUserID)
     				->where('iType','=','1')
+                    ->where('iDelete','=','0')
     				->get();
 
     	return view('front.front_personal',['users' => $users,'time' => $time,'postNum' => $postNum,'linkNum' => $linkNum,'posts' => $posts,'links' => $links]);
@@ -102,10 +106,12 @@ class PersonalController extends Controller
 	    }    
 	    // 讨论数量
     	$postNum = Post::where('sUserID',$sUserID)
+                        ->where('iDelete','=','0')
     					->where('iType','=','1')
     					->count();
     	// 链接数
     	$linkNum = Post::where('sUserID',$sUserID)
+                        ->where('iDelete','=','0')
     					->where('iType','=','2')
     					->count();
     	
@@ -113,6 +119,7 @@ class PersonalController extends Controller
     	$posts = DB::table('post')
     				->leftjoin('posttype','post.sPostTypeID','=','posttype.id')
     				->select('post.*','posttype.sName')
+                    ->where('iDelete','=','0')
     				->where('sUserID',$sUserID)
     				->where('iType','=','1')
     				->get();
@@ -155,6 +162,7 @@ class PersonalController extends Controller
     					->count();
     	// 链接数
     	$linkNum = Post::where('sUserID',$sUserID)
+                        ->where('iDelete','=','0')
     					->where('iType','=','2')
     					->count();
     	
@@ -162,6 +170,7 @@ class PersonalController extends Controller
     	$links = DB::table('post')
     				->leftjoin('posttype','post.sPostTypeID','=','posttype.id')
     				->select('post.*','posttype.sName')
+                    ->where('iDelete','=','0')
     				->where('sUserID',$sUserID)
     				->where('iType','=','2')
     				->get();
@@ -202,10 +211,12 @@ class PersonalController extends Controller
 	    }    
 	    // 讨论数量
     	$postNum = Post::where('sUserID',$sUserID)
+                        ->where('iDelete','=','0')
     					->where('iType','=','1')
     					->count();
     	// 链接数
     	$linkNum = Post::where('sUserID',$sUserID)
+                        ->where('iDelete','=','0')
     					->where('iType','=','2')
     					->count();
     	// 帖子
@@ -213,5 +224,22 @@ class PersonalController extends Controller
     	
 
     	return view('front.front_personalPost',['users' => $users,'time' => $time,'postNum' => $postNum,'linkNum' => $linkNum,'posts' => $posts]);
+    }
+
+    // 删除帖子
+    public function postDelete(Request $request){
+        $sPostID = $request->sPostID;
+
+        $posts = Post::find($sPostID);
+        if(!empty($posts)){
+            if($posts->delete()){
+                return 1;
+            }else{
+                return 2;
+            }
+        }else{
+            return 0;
+        }
+        
     }
 }

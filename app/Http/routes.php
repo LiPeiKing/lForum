@@ -39,6 +39,8 @@ Route::get('/personal/postsList','Front\PersonalController@postsList');
 Route::get('/personal/linksList','Front\PersonalController@linksList');
 // 查看个人post
 Route::get('/personal/post/{sPostID}','Front\PersonalController@postView');
+// 删除帖子
+Route::post('/topics/delete','Front\PersonalController@postDelete');
 
 
 
@@ -63,7 +65,7 @@ Route::get('/front/logout','Front\UserInfoController@logout');
 
 // -----------------------------------------------------------------------------
 // 发帖
-Route::get('/topics/create','Front\PostController@store');
+Route::get('/topics/create/{sPostID?}','Front\PostController@store');
 // 保存
 Route::post('/topics/save','Front\PostController@save');
 // 分相链接

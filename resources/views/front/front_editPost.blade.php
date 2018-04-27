@@ -9,13 +9,11 @@
 		<hr>
 
 		<form method="POST" action="" accept-charset="UTF-8" id="postForm" class="form-horizontal">
-			<!-- <input type="hidden" name="_token" value="{{csrf_token()}}"/> -->
+			<input type="hidden" name="_token" value="{{csrf_token()}}"/>
 			<div class="form-group">
 				<div class="col-sm-2">
                     <select class="form-control" name="postType" id="postType">
                         <option value="" disabled="" selected="">请选择分类</option>
-                         
-                        
                     	@foreach ($postTypes as $postType)
 						    <option value="{{$postType->id}}" value="{{$postType->id}}">{{$postType->sName}}</option>
 						@endforeach
@@ -26,7 +24,7 @@
 
                 <div class="col-sm-10">
 					
-						<input class="form-control" id="sTitle" placeholder="请填写标题" name="sTitle" type="text" value="">
+						<input class="form-control" id="sTitle" placeholder="请填写标题" name="sTitle" type="text" value="{{$posts->sTitle or ''}}">
 				
 				</div>
 			</div>
@@ -34,20 +32,25 @@
 			<div class="form-group">
 				<div class="col-sm-12">
 					<div id="summernote" class="col-sm-12"></div>
-					
 				</div>
-				
+				<input id="contents"></input>
 			</div>
 				
 			
 			
 			<div class="form-group">
 				<div class="col-sm-12">
-					<button class="btn btn-primary submit-btn" id="topicSubmit" type="submit"> <i class="fa fa-paper-plane"></i> 发布文章</button>
-					
+					<button class="btn btn-primary submit-btn" id="topicSubmit" type="submit"> <i class="fa fa-paper-plane"></i> 发布文章</input>
 				</div>
 			</div>
 		</form>
+
+		写到这里需要从前面页面传过来帖子类型并绑定
+	
+		<input type="hidden" id="hidsPostType" value="{{$posts->sPostType or ''}}">
+		<input type="hidden" id="hidsContent" value="{{$posts->sContetnt or ''}}">
+
+
 
 	</div>
 </div>
@@ -100,15 +103,24 @@
 		var sContent = $('#summernote').summernote('code');
 		var sTitle = $("#sTitle").val();
 		var sTypeID = $("select option:selected").val();
+
 		// console.log(sTypeID);
 		// console.log(sTitle);
+		// console.log(sContent);
 
 		if(bv.isValid()){
+
+			var posts = {
+	            sTypeID:sTypeID,
+	            sTitle:sTitle,
+	            sContent:sContent
+	        };
+	        console.log(posts);
 			$.ajax({
 				type: 'POST',
 				url: '/topics/save',
-				data: '{"sTitle":"'+sTitle+'","sContent":"'+sContent+'","sTypeID":"'+sTypeID+'"}',
-				contentType: "application/json",
+				data: posts,
+				dataType:'text',
 				headers: {
 					'X-CSRF-TOKEN': $('meta[name="token"]').attr("content")
 				},
@@ -138,7 +150,6 @@
 		}
 
 	});
-
 
 });
 

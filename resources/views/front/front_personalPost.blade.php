@@ -129,22 +129,25 @@ h1 {
             <!-- 标题下的图标 -->
             <div class="article-meta text-center">
             	<!-- 发表时间 -->
-                <i class="glyphicon glyphicon-time"></i> <span title="3小时前" class="timeago">3小时前</span> &nbsp;&nbsp;
+                <i class="glyphicon glyphicon-time"></i> <span title="3小时前" class="timeago">{{$posts->dCreateTime or ''}}</span> &nbsp;&nbsp;
                 <!-- 点赞 -->
-                <i class="glyphicon glyphicon-thumbs-up"></i> <span>1</span>
+                <i class="glyphicon glyphicon-thumbs-up"></i> <span>{{$posts->iPraise or '0'}}</span>
             </div>
             <div class="content-body">
 			    <div class="markdown-body topic-content-big-font" id="emojify">
+
+
+
 
 			    </div>
 		    </div>                        
 
 			<div class="panel-footer">
 				<div class="actions">
-		    		<a id="postDelete" href="javascript:void(0);" data-url="" data-toggle="tooltip" data-placement="top" title="删除">
+		    		<a id="postDelete" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="删除">
 		        		<i class="glyphicon glyphicon-trash"></i>
 					</a>
-		            <a id="topic-edit-button" href="javascript:void(0);" data-toggle="tooltip" data-placement="top" title="编辑">
+		            <a id="topic-edit-button" href="/topics/create/{{$posts->sPostID}}" data-toggle="tooltip" data-placement="top" title="编辑">
 		            	<i class="glyphicon glyphicon-edit"></i>
 		          	</a>      
     			</div>
@@ -152,10 +155,7 @@ h1 {
 
 
 
-
-
-
-            
+		<input type="hidden" id="sPostID" value="{{$posts->sPostID}}">
 	    </div>  
   	</div>
 </div>
@@ -164,14 +164,88 @@ h1 {
 <input type="hidden" id="content" value="{{$posts->sContent}}">
 <script type="text/javascript">
 	$(function () {
-	  $('a[data-toggle="tooltip"]').tooltip();
+		// 模态框显示提示信息
+	  	$('a[data-toggle="tooltip"]').tooltip();
 
-	  // 将
-	  var content = $("#content").val();
-	  $("#emojify").append(content);
+	  	// 获得内容
+	  	var content = $("#content").val();
+	  	// 将文本内容写入页面
+	  	$("#emojify").append(content);
+
+
+	  	// 删除帖子
+	  	$("#postDelete").on('click',function(){
+	  		var sPostID = $("#sPostID").val();	
+			console.log(sPostID);
+	  		$.confirm({
+			    title: '警告',
+			    content: '<div style="text-align:center">您确定删除么！</div>',
+			    buttons: {
+			        确定:{
+			            btnClass: 'btn-blue',
+			            action:function(){
+			            	$.ajax({
+								type: 'POST',
+								url: '/topics/delete',
+								data: '{"sPostID":"'+sPostID+'"}',
+							    contentType: "application/json",
+								headers: {
+									'X-CSRF-TOKEN': $('meta[name="token"]').attr("content")
+								},
+								success: function(data){
+									console.log(data);
+									if(data == 1){
+										$.dialog({
+											title:'',
+											content: '<div style="text-align:center">删除成功了呦！</div>',
+										});
+										setTimeout("location.href='/personal/postsList'",1500);
+									}else if(data == 0){
+										$.dialog({
+											title:'',
+											content: '<div style="text-align:center">系统原因删除失败！</div>',
+										});
+									}else{
+										$.dialog({
+											title:'',
+											content: '<div style="text-align:center">删除失败了呦！</div>',
+										});
+									}
+								},
+								error: function(xhr, type){
+									$.dialog({
+										title:'',
+										content: '<div style="text-align:center">系统原因删除失败！</div>',
+									});
+
+								}
+
+							});
+
+			            }
+			        	
+
+
+			        },
+			        取消: function () {
+			            
+			        }
+			    }
+			});
+	  		
+
+
+
+
+
+	  	});
+
 
 
 	});
 </script>
 
+@endsection
+
+@section('script')
 @endsection
