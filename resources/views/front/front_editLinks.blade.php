@@ -79,7 +79,7 @@
 						message: '地址不能为空！'
 					},
 					uri: {
-						message: '地址格式错误！'
+						message: '地址格式错误！http://www.xxx.com'
 					}
 				}
 			}
@@ -96,11 +96,17 @@
 		console.log(sLinks);
 
 		if(bv.isValid()){
+			var links = {
+	            sTitle:sTitle,
+	            sContent:sContent,
+	            sContent:sContent,
+	            sLinks:sLinks
+	        };
 			$.ajax({
 				type: 'POST',
 				url: '/links/save',
-				data: '{"sTitle":"'+sTitle+'","sContent":"'+sContent+'","sLinks":"'+sLinks+'"}',
-				contentType: "application/json",
+				data: links,
+				dataType:'text',
 				headers: {
 					'X-CSRF-TOKEN': $('meta[name="token"]').attr("content")
 				},

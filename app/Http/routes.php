@@ -41,6 +41,11 @@ Route::get('/personal/linksList','Front\PersonalController@linksList');
 Route::get('/personal/post/{sPostID}','Front\PersonalController@postView');
 // 删除帖子
 Route::post('/topics/delete','Front\PersonalController@postDelete');
+// 编辑帖子
+Route::get('/topics/edit','Front\PersonalController@postsEdit');
+
+// 查看列链接
+Route::get('/personal/link/{sPostID}','Front\PersonalController@linkView');
 
 
 
@@ -67,7 +72,7 @@ Route::get('/front/logout','Front\UserInfoController@logout');
 // 发帖
 Route::get('/topics/create/{sPostID?}','Front\PostController@store');
 // 保存
-Route::post('/topics/save','Front\PostController@save');
+Route::post('/topics/save/','Front\PostController@save');
 // 分相链接
 Route::get('/links/share','Front\PostController@linksStore');
 // 保存链接

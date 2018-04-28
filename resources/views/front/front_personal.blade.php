@@ -135,7 +135,7 @@ span.timeago {
 				            <i class="glyphicon glyphicon-tag"></i>
 					        <span> {{$post->sName}}&nbsp;</span>
 					        <i class="glyphicon glyphicon-thumbs-up"></i>
-					        <span> {{$post->iPraise or '1'}} &nbsp;</span>
+					        <span> {{$post->iPraise or '0'}} &nbsp;</span>
 					        <i class="glyphicon glyphicon-calendar"></i>
 					        <span class="timeago">{{$post->dCreateTime}}</span>
 					    </span>
@@ -145,7 +145,6 @@ span.timeago {
 			@endif
 		</div>
 	</div>
-
 
 	<div class="panel panel-default">
 		<div class="panel-heading text-center" style="background-color: #ffffff !important;">
@@ -159,14 +158,14 @@ span.timeago {
 				<ul class="list-group">
 					@foreach($links as $link)
 					<li class="list-group-item"> 
-						<a href="javascript:;" title="{{$link->sTitle}}" class="">
+						<a href="/personal/link/{{$link->sPostID}}" title="{{$link->sTitle}}" class="">
 							{{$link->sTitle}}
 						</a>
 						<span class="meta pull-right">
 				            <i class="glyphicon glyphicon-tag"></i>
 					        <span>链接</span>
 					        <i class="glyphicon glyphicon-thumbs-up"></i>
-					        <span> {{$post->iPraise or '1'}} &nbsp;</span>
+					        <span> {{$post->iPraise or '0'}} &nbsp;</span>
 					        <i class="glyphicon glyphicon-calendar"></i>
 
 					        <span class="timeago">{{$post->dCreateTime}}</span>

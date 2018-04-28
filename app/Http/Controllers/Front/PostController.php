@@ -19,43 +19,76 @@ class PostController extends Controller
         if(!empty($sPostID)){
             $posts = Post::find($sPostID);
             $postTypes = PostType::all();
-            return view('front.front_editPost',['postTypes' => $postTypes,'posts' => $posts]);
+            $sPostType = PostType::find($posts->sPostTypeID);
+            return view('front.front_editPost',['postTypes' => $postTypes,'sPostType' => $sPostType,'posts' => $posts]);
         }else{
             $postTypes = PostType::all();
             return view('front.front_editPost',['postTypes' => $postTypes]);
         }
     }
 
-    // 保存帖子信息
+    // 保存\编辑帖子信息
     public function save(Request $request){
     	$sContent = $request->sContent;
         $sTitle = $request->sTitle;
     	$sPostTypeID = $request->sTypeID;
         $sContent = htmlspecialchars($sContent);
+        $sPostID = $request->sPostID;
 
-    	if(!empty($sTitle)){
+        if(empty($sPostID)){
+            if(!empty($sTitle)){
+                $posts = new Post;
+                $posts->sPostID = Uuid::uuid1();
+                $posts->sPostTypeID = $sPostTypeID;
+                $posts->sUserID = $request->session()->get('sUserID');
+                $posts->sTitle = $sTitle;
+                $posts->sContent = $sContent;
+                $posts->sAuthor = $request->session()->get('sUserName');
+                $posts->iDelete = 0;
+                $posts->iType = 1;
+                $posts->dCreateTime = date('Y-m-d H:i:s',time());
+                if($posts->save()){
+                    return 1;
+                }else{
+                    return 2;
+                }
+            }else{
+                return 0;
+            }
+        }else{
+            
+            if(!empty($sTitle)){
+                // $posts = new Post;
+                // $posts->sPostID = Uuid::uuid1();
+                // $posts->sPostTypeID = $sPostTypeID;
+                // $posts->sUserID = $request->session()->get('sUserID');
+                // $posts->sTitle = $sTitle;
+                // $posts->sContent = $sContent;
+                // $posts->sAuthor = $request->session()->get('sUserName');
+                // $posts->iDelete = 0;
+                // $posts->iType = 1;
+                // $posts->dCreateTime = date('Y-m-d H:i:s',time());
 
 
-    		$posts = new Post;
+                $posts = Post::find($sPostID);
+                $posts->sPostTypeID = $sPostTypeID;
+                $posts->sTitle = $sTitle;
+                $posts->sContent = $sContent;
+                $posts->dModifyTime = date('Y-m-d H:i:s',time());
 
-    		$posts->sPostID = Uuid::uuid1();
-    		$posts->sPostTypeID = $sPostTypeID;
-    		$posts->sUserID = $request->session()->get('sUserID');
-    		$posts->sTitle = $sTitle;
-    		$posts->sContent = $sContent;
-    		$posts->sAuthor = $request->session()->get('sUserName');
-    		$posts->iDelete = 0;
-    		$posts->iType = 1;
-    		$posts->dCreateTime = date('Y-m-d H:i:s',time());
-    		if($posts->save()){
-    			return 1;
-    		}else{
-    			return 2;
-    		}
+                if($posts->save()){
+                    return 1;
+                }else{
+                    return 2;
+                }
+            }else{
+                return 0;
+            }
 
-    	}else{
-    		return 0;
-    	}
+
+        }
+
+    	
     }
 
     // 分享链接页面初始化
@@ -67,6 +100,7 @@ class PostController extends Controller
     	$sTitle = $request->sTitle;
     	$sLinks = $request->sLinks;
     	$sContent = $request->sContent;
+        $sContent = htmlspecialchars($sContent);
 
     	if(!empty($sTitle)){
     		$posts = new Post;

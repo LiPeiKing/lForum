@@ -128,7 +128,7 @@ span.timeago {
 				<ul class="list-group">
 					@foreach($links as $link)
 					<li class="list-group-item"> 
-						<a href="javascript:;" title="{{$link->sTitle}}" class="">
+						<a href="/personal/link/{{$link->sPostID}}" title="{{$link->sTitle}}" class="">
 							{{$link->sTitle}}
 						</a>
 						<span class="meta pull-right">

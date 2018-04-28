@@ -129,7 +129,7 @@ h1 {
             <!-- 标题下的图标 -->
             <div class="article-meta text-center">
             	<!-- 发表时间 -->
-                <i class="glyphicon glyphicon-time"></i> <span title="3小时前" class="timeago">{{$posts->dCreateTime or ''}}</span> &nbsp;&nbsp;
+                <i class="glyphicon glyphicon-time"></i> <span title="" class="timeago">{{$posts->dCreateTime or ''}}</span> &nbsp;&nbsp;
                 <!-- 点赞 -->
                 <i class="glyphicon glyphicon-thumbs-up"></i> <span>{{$posts->iPraise or '0'}}</span>
             </div>
@@ -156,14 +156,28 @@ h1 {
 
 
 		<input type="hidden" id="sPostID" value="{{$posts->sPostID}}">
+		<input type="hidden" id="iType" value="{{$posts->iType}}">
+		<input type="hidden" id="sLinks" value="{{$posts->sLinks}}">
+
 	    </div>  
   	</div>
 </div>
-
+<a href=""></a>
 
 <input type="hidden" id="content" value="{{$posts->sContent}}">
 <script type="text/javascript">
 	$(function () {
+
+		// 处理链接显示效果
+		var iType = $("#iType").val();
+		var sLinks = $("#sLinks").val();
+		if(iType =="2"){
+			var sl = '<a class="glyphicon glyphicon-link" target="_blank" href="'+sLinks+'">链接</a>';
+	  		$("#emojify").append(sl);
+
+		}
+
+
 		// 模态框显示提示信息
 	  	$('a[data-toggle="tooltip"]').tooltip();
 
@@ -199,7 +213,11 @@ h1 {
 											title:'',
 											content: '<div style="text-align:center">删除成功了呦！</div>',
 										});
-										setTimeout("location.href='/personal/postsList'",1500);
+										if(iType == '2'){
+											setTimeout("location.href='/personal/linksList'",1500);
+										}else{
+											setTimeout("location.href='/personal/postsList'",1500);
+										}
 									}else if(data == 0){
 										$.dialog({
 											title:'',

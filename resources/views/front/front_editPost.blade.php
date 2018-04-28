@@ -9,7 +9,7 @@
 		<hr>
 
 		<form method="POST" action="" accept-charset="UTF-8" id="postForm" class="form-horizontal">
-			<input type="hidden" name="_token" value="{{csrf_token()}}"/>
+			<!-- <input type="hidden" name="_token" value="{{csrf_token()}}"/> -->
 			<div class="form-group">
 				<div class="col-sm-2">
                     <select class="form-control" name="postType" id="postType">
@@ -40,17 +40,16 @@
 			
 			<div class="form-group">
 				<div class="col-sm-12">
-					<button class="btn btn-primary submit-btn" id="topicSubmit" type="submit"> <i class="fa fa-paper-plane"></i> 发布文章</input>
+					<button class="btn btn-primary submit-btn" id="topicSubmit" type=""> <i class="glyphicon glyphicon-send"></i>&nbsp;发布文章</button>
 				</div>
 			</div>
+			<input type="hidden" id="hidsPostType" value="{{$sPostType->id or ''}}">
+			<input type="hidden" id="hidsContent" value="{{$posts->sContent or ''}}">
+			<input type="hidden" id="hidsPostID" value="{{$posts->sPostID or ''}}">
 		</form>
 
-		写到这里需要从前面页面传过来帖子类型并绑定
 	
-		<input type="hidden" id="hidsPostType" value="{{$posts->sPostType or ''}}">
-		<input type="hidden" id="hidsContent" value="{{$posts->sContetnt or ''}}">
-
-
+		
 
 	</div>
 </div>
@@ -61,6 +60,8 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
+
+		// 初始化编辑器
 		$('#summernote').summernote({
 			lang: 'zh-CN',
 			placeholder: '请输入内容！',
@@ -69,6 +70,17 @@
         minHeight: 350,             // set minimum height of editor
         maxHeight: null 
     });
+
+	// 编辑页面时将数据绑定扫页面上
+	var sPostType = $("#hidsPostType").val();
+	var sContent = $("#hidsContent").val();
+	if(sPostType.length > 0){
+		$("select").find("option[value ="+sPostType+" ]").attr("selected","selected");
+		// $("#topicSubmit").html('<i class="glyphicon glyphicon-edit"></i> 发布文章');
+	}
+	if(sContent.length > 0){
+		$('#summernote').summernote('code',sContent);
+	}
 
 	var form = $("#postForm");
 	form.bootstrapValidator({
@@ -103,19 +115,18 @@
 		var sContent = $('#summernote').summernote('code');
 		var sTitle = $("#sTitle").val();
 		var sTypeID = $("select option:selected").val();
+		var sPostID = $("#hidsPostID").val();
 
 		// console.log(sTypeID);
 		// console.log(sTitle);
 		// console.log(sContent);
-
 		if(bv.isValid()){
-
 			var posts = {
 	            sTypeID:sTypeID,
 	            sTitle:sTitle,
-	            sContent:sContent
+	            sContent:sContent,
+	            sPostID:sPostID
 	        };
-	        console.log(posts);
 			$.ajax({
 				type: 'POST',
 				url: '/topics/save',
@@ -148,6 +159,9 @@
 
 			});
 		}
+		
+
+		
 
 	});
 
