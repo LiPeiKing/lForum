@@ -11,9 +11,17 @@
 |
 */
 
-Route::get('/', function () {
-    return view('front.front_index');
-});
+// Route::get('/', function () {
+//     return view('front.front_index');
+// });
+
+// 初始页面第一个路由
+Route::get('/','Front\IndexController@store');
+
+// 我的动态
+Route::get('/myAbout','Front\IndexController@myAboutStore');
+
+
 // 前台页面路由
 Route::get('/front/login',function(){
 	return view('front.front_login');
@@ -34,9 +42,9 @@ Route::post('/registor','Front\CheckController@edit');
 // 个人中心
 Route::get('/personal/center','Front\PersonalController@store');
 // 帖子列表
-Route::get('/personal/postsList','Front\PersonalController@postsList');
+Route::get('/personal/postsList/{sUserID}','Front\PersonalController@postsList');
 // 链接列表
-Route::get('/personal/linksList','Front\PersonalController@linksList');
+Route::get('/personal/linksList/{sUserID}','Front\PersonalController@linksList');
 // 查看个人post
 Route::get('/personal/post/{sPostID}','Front\PersonalController@postView');
 // 删除帖子
@@ -44,8 +52,15 @@ Route::post('/topics/delete','Front\PersonalController@postDelete');
 // 编辑帖子
 Route::get('/topics/edit','Front\PersonalController@postsEdit');
 
-// 查看列链接
+// 查看链接
 Route::get('/personal/link/{sPostID}','Front\PersonalController@linkView');
+
+// 点赞
+Route::post('/topics/praise','Front\PersonalController@praise');
+
+// 回复
+Route::post('/topics/replay','Front\PersonalController@replay');
+
 
 
 
@@ -74,7 +89,7 @@ Route::get('/topics/create/{sPostID?}','Front\PostController@store');
 // 保存
 Route::post('/topics/save/','Front\PostController@save');
 // 分相链接
-Route::get('/links/share','Front\PostController@linksStore');
+Route::get('/links/share/{sPostID?}','Front\PostController@linksStore');
 // 保存链接
 Route::post('/links/save','Front\PostController@linksSave');
 

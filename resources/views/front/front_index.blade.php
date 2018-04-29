@@ -32,7 +32,8 @@
 		
 	}
 	#sidebar-resources{
-
+    	margin-bottom: -10px;
+		
 	}
 
 	#sidebar-resources li{
@@ -57,13 +58,34 @@
 		width: 20px;
 		margin-top: 1px;
 	}
+	.topic-list {
+	    margin-bottom: 0px;
+        color: #8b8a8a;
+        margin-left: -15px;
+    	margin-right: -15px;
+    	margin-top: 0;
+	}
+	.topic-list .list-group-item{
+	    padding: 5px 28px;
+	    border: none;
+	    margin-bottom: 0px;
+	    border-bottom: 1px dashed #eae7e7;
+	    margin-top: 10px;
+	}
+	.empty-block {
+		text-align: center;
+		line-height: 60px;
+		margin: 10px;
+		color: #ccc;
+	}
+
 </style>
 <body  style=" overflow:scroll">
 	<!-- 导航栏 -->
 	<nav class="navbar navbar-default">
 		<div class="container">
 			<!-- logo -->
-			<a class="navbar-brand" href="javascript:;"><img src="{{asset('./front/images/logo.jpg')}}" class="logo" class="img-rounded"></a>
+			<a class="navbar-brand" href="/"><img src="{{asset('./front/images/logo.jpg')}}" class="logo" class="img-rounded"></a>
 
 			<!-- 导航栏的响应式按钮 -->
 			<div class="navbar-header navbar-right">
@@ -96,7 +118,11 @@
 						<li class="text-center">
 							<a href="#" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dLabel">
 								<img class="img-rounded" id="head" alt="liking" src="{{asset('./front/images/caomei.jpg')}}">
-								{{Session::get('sLoginName')}}
+								@if(Session::get('sUserName') != null)
+									{{Session::get('sUserName')}}
+								@else
+									{{Session::get('sLoginName')}}
+								@endif
 								<span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu" aria-labelledby="dLabel">
@@ -131,43 +157,109 @@
 				@section('content')
 				<div class="col-md-9 main-col">
 					<div class="panel panel-default">
-						<div class="panel-heading" style="background-color: #ffffff !important;border:none;">
+						<div class="panel-heading" style="background-color: #ffffff !important;border:none;margin-bottom: -18px">
 							<ul class="nav nav-tabs">
-								<li role="presentation" class="active"><a href="javascript:;"><i class="glyphicon glyphicon-cloud" aria-hidden="true"></i> 所有动态</a></li>
-								<li role="presentation" class=""><a href="javascript:;"><i class="glyphicon glyphicon-user" aria-hidden="true"></i> 我的动态</a></li>
+								@if(isset($personalPosts))
+
+									<li role="presentation" class=""><a href="/"><i class="glyphicon glyphicon-cloud" aria-hidden="true"></i> 所有动态</a></li>
+										<li role="presentation" class="active" id="myAbout"><a href="/myAbout"><i class="glyphicon glyphicon-user" aria-hidden="true"></i> 我的动态</a></li>
+								@else 
+									<li role="presentation" class="active"><a href="/"><i class="glyphicon glyphicon-cloud" aria-hidden="true"></i> 所有动态</a></li>
+									@if(Session::get('sUserID') != null)
+										<li role="presentation" class="" id="myAbout"><a href="/myAbout"><i class="glyphicon glyphicon-user" aria-hidden="true"></i> 我的动态</a></li>
+									@endif
+									
+								@endif
+								
+								
 							</ul>
 						</div>
 
 						<div class="panel-body">
 							<ul class="list-group row topic-list">
+								<!-- 此处为了在后面的继承模板中不出错 -->
+								@if(!empty($postall))
+									@foreach($postall as $postalleach)
+										<li class="list-group-item media">
+										    <div class="avatar pull-left">
+										      
+										    </div>
+										    <div class="infos">
+										        <div class="media-heading">
+													@if($postalleach->iType == '1')
+														<i class="glyphicon glyphicon-list-alt" style="padding-right: 3px;" title="发表新帖"></i>
+														<a href="javascript:;">
+											                {{$postalleach->sAuthor or $postalleach->sLoginName }}	&nbsp;
+											            </a>
+
+											                发布了&nbsp;
+										                <a href="/personal/post/{{$postalleach->sPostID}}" title="{{$postalleach->sTitle}}">
+										                    {{$postalleach->sTitle}}
+										                </a>
+													@else
+														<i class="glyphicon glyphicon-link" style="padding-right: 3px;" title="分享链接"></i>
+														<a href="javascript:;">
+											                {{$postalleach->sAuthor or $postalleach->sLoginName }}	&nbsp;
+											            </a>
+
+											                分享了&nbsp;
+										                <a href="/personal/post/{{$postalleach->sPostID}}" title="{{$postalleach->sTitle}}">
+										                    {{$postalleach->sTitle}}
+										                </a>
+													@endif
+												
+										            
+										            <span class="meta pull-right">
+										                 <span class="glyphicon glyphicon-calendar" style="padding-right: 5px;padding-top: 0px;" title="发布时间"></span><span>{{$postalleach->dCreateTime}}</span>
+
+										            </span>
+										        </div>
+										    </div>
+										</li>
+									@endforeach
+								@elseif(!empty($personalPosts))
+									@foreach($personalPosts as $personalPost)
+										<li class="list-group-item media">
+										    <div class="avatar pull-left">
+										      
+										    </div>
+										    <div class="infos">
+										        <div class="media-heading">
+													@if($personalPost->iType == '1')
+														<i class="glyphicon glyphicon-list-alt" style="padding-right: 3px;" title="发表新帖"></i>
+														<a href="javascript:;">
+											                {{$personalPost->sAuthor or $personalPost->sLoginName }}	&nbsp;
+											            </a>
+
+											                发布了&nbsp;
+										                <a href="/personal/post/{{$personalPost->sPostID}}" title="{{$personalPost->sTitle}}">
+										                    {{$personalPost->sTitle}}
+										                </a>
+													@else
+														<i class="glyphicon glyphicon-link" style="padding-right: 3px;" title="分享链接"></i>
+														<a href="javascript:;">
+											                {{$personalPost->sAuthor or $personalPost->sLoginName }}	&nbsp;
+											            </a>
+
+											                分享了&nbsp;
+										                <a href="/personal/post/{{$personalPost->sPostID}}" title="{{$personalPost->sTitle}}">
+										                    {{$personalPost->sTitle}}
+										                </a>
+													@endif
+												
+										            
+										            <span class="meta pull-right">
+										                 <span class="glyphicon glyphicon-calendar" style="padding-right: 5px;padding-top: 0px;" title="发布时间"></span><span>{{$personalPost->dCreateTime}}</span>
+
+										            </span>
+										        </div>
+										    </div>
+										</li>
+									@endforeach
+								@else 
+									<div class="empty-block">没有任何数据~~</div>
+								@endif
 								
-
-								<li class="list-group-item media">
-								    <div class="avatar pull-left">
-								        <a href="https://laravel-china.org/users/24577">
-								            <img class="media-object img-thumbnail avatar" alt="sgjq" src="https://lccdn.phphub.org/uploads/avatars/24577_1524449055.jpg?imageView2/1/w/100/h/100">
-								        </a>
-								    </div>
-								    <div class="infos">
-								        <div class="media-heading">
-
-								            <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
-
-								            <a href="https://laravel-china.org/users/24577">
-								                sgjq
-								            </a>
-
-								                            赞了话题
-								                 <a href="https://laravel-china.org/topics/8560/crawling-the-hottest-sisters-welfare" title="爬取了知乎上最热的妹子爆照福利">
-								                    爬取了知乎上最热的妹子爆照福利
-								                </a>
-								                        <span class="meta pull-right">
-								                 <span class="timeago">27秒前</span>
-								            </span>
-								                    </div>
-								    </div>
-								</li>
-
 
 							</ul>
 						</div>
@@ -176,6 +268,7 @@
 				</div>
 				@show
 
+				<!-- 登录前隐藏登陆后显示 操作按钮 -->
 				<div class="col-md-3">
 					@if(Session::get('sLoginName') != null)
 						<div class="panel panel-default">
@@ -191,6 +284,8 @@
 						</div>
 					@endif
 
+
+					<!-- 友情链接 -->
 					<div class="panel panel-default">
 						<div class="panel-heading text-center" style="background-color: #ffffff !important;">
 							<h3 class="panel-title">友情链接</h3>
@@ -201,6 +296,7 @@
 							</a>
 						</div>
 					</div>
+					<!-- 推荐资源 -->
 					<div class="panel panel-default">
 						<div class="panel-heading text-center" style="background-color: #ffffff !important;">
 							<h3 class="panel-title">推荐资源</h3>
@@ -261,27 +357,32 @@
 				</div>
 			@show
 		</div>
-
 	</div>
+	<input type="hidden" id="hidsLoginID" value="{{Session::get('sUserID')}}">
+
 
 </body>
 <script>
 	$(function(){
-		$("#logout").on('click',function(){
+	
+	});
+	$("#logout").on('click',function(){
 			$.confirm({
 			    title: '提示：',
-			    content:'您确定退出登录么？',
+			    content:'<div style="text-align:center;">您确定退出登录么？</div>',
 			    // offsetBottom:'10px',
 			    buttons: {
-			        确定: function () {
-			            location.href = "/front/logout";
+			        确定: {
+			        	 btnClass: 'btn-blue',
+			        	 action:function(){
+			            	location.href = "/front/logout";
+			        	 }
 			        },
 			        取消: function () {
 			        }
 			    }
 			});
 		})
-	});
 </script>
 @section('script')
 

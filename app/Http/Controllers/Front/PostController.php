@@ -46,6 +46,8 @@ class PostController extends Controller
                 $posts->sAuthor = $request->session()->get('sUserName');
                 $posts->iDelete = 0;
                 $posts->iType = 1;
+                $posts->iPraise = 0;
+                $posts->iReplys = 0;
                 $posts->dCreateTime = date('Y-m-d H:i:s',time());
                 if($posts->save()){
                     return 1;
@@ -58,21 +60,11 @@ class PostController extends Controller
         }else{
             
             if(!empty($sTitle)){
-                // $posts = new Post;
-                // $posts->sPostID = Uuid::uuid1();
-                // $posts->sPostTypeID = $sPostTypeID;
-                // $posts->sUserID = $request->session()->get('sUserID');
-                // $posts->sTitle = $sTitle;
-                // $posts->sContent = $sContent;
-                // $posts->sAuthor = $request->session()->get('sUserName');
-                // $posts->iDelete = 0;
-                // $posts->iType = 1;
-                // $posts->dCreateTime = date('Y-m-d H:i:s',time());
-
-
                 $posts = Post::find($sPostID);
                 $posts->sPostTypeID = $sPostTypeID;
                 $posts->sTitle = $sTitle;
+                $posts->sAuthor = $request->session()->get('sUserName');
+                
                 $posts->sContent = $sContent;
                 $posts->dModifyTime = date('Y-m-d H:i:s',time());
 
@@ -86,14 +78,19 @@ class PostController extends Controller
             }
 
 
-        }
-
-    	
+        }	
     }
 
     // 分享链接页面初始化
     public function linksStore(Request $request){
-    	return view('front.front_editLinks');
+        $sPostID = $request->route('sPostID');
+        if(!empty($sPostID)){
+            $links = Post::find($sPostID);
+            return view('front.front_editLinks',['links' => $links]);
+        }else{
+            return view('front.front_editLinks');
+
+        }
     }
     // 分享链接保存
     public function linksSave(Request $request){
@@ -101,29 +98,56 @@ class PostController extends Controller
     	$sLinks = $request->sLinks;
     	$sContent = $request->sContent;
         $sContent = htmlspecialchars($sContent);
+        $sPostID = $request->sPostID;
 
-    	if(!empty($sTitle)){
-    		$posts = new Post;
+        if(!empty($sPostID)){
 
-    		$posts->sPostID = Uuid::uuid1();
-    		// $posts->sPostTypeID = $sPostTypeID;
-            $posts->sUserID = $request->session()->get('sUserID');
-            
-    		$posts->sTitle = $sTitle;
-    		$posts->sContent = $sContent;
-    		$posts->sAuthor = $request->session()->get('sUserName');
-    		$posts->sLinks = $sLinks;
-    		$posts->iDelete = 0;
-    		$posts->iType = 2;
-    		$posts->dCreateTime = date('Y-m-d H:i:s',time());
-    		if($posts->save()){
-    			return 1;
-    		}else{
-    			return 0;
-    		}
+            if(!empty($sTitle)){
+                $posts = Post::find($sPostID);
+                $posts->sTitle = $sTitle;
+                $posts->sAuthor = $request->session()->get('sUserName');
 
-    	}else{
-    		return 0;
-    	}
+                $posts->sContent = $sContent;
+                $posts->dModifyTime = date('Y-m-d H:i:s',time());
+
+                if($posts->save()){
+                    return 1;
+                }else{
+                    return 2;
+                }
+            }else{
+                return 0;
+            }
+
+
+        }else{
+            if(!empty($sTitle)){
+                $posts = new Post;
+
+                $posts->sPostID = Uuid::uuid1();
+                // $posts->sPostTypeID = $sPostTypeID;
+                $posts->sUserID = $request->session()->get('sUserID');
+                
+                $posts->sTitle = $sTitle;
+                $posts->sContent = $sContent;
+                $posts->sAuthor = $request->session()->get('sUserName');
+                $posts->sLinks = $sLinks;
+                $posts->iDelete = 0;
+                $posts->iType = 2;
+                $posts->iReplys = 0;
+                $posts->iPraise = 0;
+                $posts->dCreateTime = date('Y-m-d H:i:s',time());
+                if($posts->save()){
+                    return 1;
+                }else{
+                    return 0;
+                }
+
+            }else{
+                return 0;
+            }
+        }
+
+    	
     }
 }

@@ -8,6 +8,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Admin\UserInfo;
 use Ramsey\Uuid\Uuid;
+use App\Admin\UserNum;
+
 
 class CheckController extends Controller
 {
@@ -33,7 +35,7 @@ class CheckController extends Controller
                     $request->session()->put('sUserID',$users->sUserID);
                     $request->session()->put('sUserName',$users->sUserName);
 
-    				return view('front.front_index');
+    				return redirect("/");
     			}else{
     				$msg = "1";
     				return view('front.front_login',['msg' => $msg]);
@@ -54,14 +56,22 @@ class CheckController extends Controller
     // 注册验证
     public function edit(Request $request){
     	$users = new UserInfo;
-    	$users->sUserID = Uuid::uuid1();
+        $userNum = new UserNum;
+
+        $sUserID = Uuid::uuid1();
+
+    	$users->sUserID = $sUserID;
     	$users->sRoleID = '6473d619-4441-11e8-bf5b-6031d59b89dd';
     	$users->sLoginName = $request->sLoginName;
     	$users->sPassword = $request->sPassword;
     	$users->iState = "0";
     	$users->sAlias = '0';
     	$users->sEmail = $request->sEmail;
-    	if($users->save()){
+        $users->dCreateTime = date("Y-m-d H:i:s", time());
+        $userNum->sUserID = $sUserID;
+       
+    	if($users->save() && $userNum->save()){    
+            
     		$msg = "1";
     		return view('front.front_registor',['msg' => $msg]); 
     	}else{

@@ -54,7 +54,7 @@
 				</div>
 				
 				<div class="form-group">
-					<button type="submit" class="btn btn-success" style="width: 318px;" value="登录"><i class="glyphicon glyphicon-log-in"></i> 登录</button>
+					<button type="submit" class="btn btn-success" style="width: 318px;" value="登录"><i class="glyphicon glyphicon-log-in"></i> 注册</button>
 				</div>
 			</form>
 			<input type="hidden" id="msg" value="{{$msg or ''}}">

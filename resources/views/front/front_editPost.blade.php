@@ -66,10 +66,22 @@
 			lang: 'zh-CN',
 			placeholder: '请输入内容！',
 			tabsize: 2,
-        // height: 350,
-        minHeight: 350,             // set minimum height of editor
-        maxHeight: null 
-    });
+	        // height: 350,
+	        minHeight: 350,             // set minimum height of editor
+	        maxHeight: null,
+	        toolbar: [
+			    ['style', ['style']],
+			    ['font', ['bold', 'italic', 'underline', 'clear']],
+			    ['fontname', ['fontname']],
+			    ['color', ['color']],
+			    ['para', ['ul', 'ol', 'paragraph']],
+			    // ['height', ['height']],
+			    ['table', ['table']],
+			    ['insert', ['link', 'hr']],
+			    ['view', ['fullscreen', 'codeview']],
+			    ['help', ['help']]
+			  ]
+	    });
 
 	// 编辑页面时将数据绑定扫页面上
 	var sPostType = $("#hidsPostType").val();
@@ -142,6 +154,8 @@
 							title:'',
 							content: '<div style="text-align:center">发布成功！</div>',
 						});
+						setTimeout("location.href='/'",1500);
+						
 					}else{
 						$.dialog({
 							title:'',

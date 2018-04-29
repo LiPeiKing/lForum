@@ -9,6 +9,10 @@ use App\Http\Controllers\Controller;
 use App\Admin\UserInfo;
 use App\Admin\Post;
 use App\Admin\Reply;
+use App\Admin\UserNum;
+use App\Admin\Praise;
+use Ramsey\Uuid\Uuid;
+
 use DB;
 
 class PersonalController extends Controller
@@ -24,24 +28,22 @@ class PersonalController extends Controller
 		$show_time = strtotime($users->dCreateTime);  
 		$dur = $now_time - $show_time;
 		$time="";
-		if ($dur < 0) {  
-	        return $the_time;  
-	    } else {  
-	        if ($dur < 60) {  
-	            $time = $dur . '秒前';  
-	        } else {  
-	            if ($dur < 3600) {  
-	                $time = floor($dur / 60) . '分钟前';  
-	            } else {  
-	                if ($dur < 86400) {  
-	                    $time = floor($dur / 3600) . '小时前';  
-	                } else {  
-	                        $time = floor($dur/(60*60*24)) . '天前';  
-	                     
-	                }  
-	            }  
-	        }  
-	    }    
+    
+        if($dur < 0){
+            $time = $users->dCreateTime;
+        }elseif ($dur < 60) {
+           $time = $dur.'秒前'; 
+        }elseif($dur < 3600){
+            $time = floor($dur/60).'分钟前'; 
+        }elseif($dur < 86400){
+            $time = floor($dur/3600) . '小时前';  
+        }else{
+            $time = floor($dur/(60*60*24)).'天前';  
+        }
+
+        // 第几位用户
+        $userNum = UserNum::where('sUserID',$sUserID)->first();
+
 	    // 讨论数量
     	$postNum = Post::where('sUserID',$sUserID)
     					->where('iType','=','1')
@@ -74,15 +76,17 @@ class PersonalController extends Controller
                     ->where('iDelete','=','0')
     				->get();
 
-    	return view('front.front_personal',['users' => $users,'time' => $time,'postNum' => $postNum,'linkNum' => $linkNum,'posts' => $posts,'links' => $links]);
+    	return view('front.front_personal',['users' => $users,'time' => $time,'postNum' => $postNum,'linkNum' => $linkNum,'posts' => $posts,'links' => $links,'userNum' => $userNum]);
     }
 
     // 帖子列表
-    public function postsList(Request $request){
+    public function postsList(Request $request,$sUserID){
     	$sLoginName = $request->session()->get('sLoginName');
-    	$sUserID = $request->session()->get('sUserID');
-    	$users = UserInfo::where('sLoginName',$sLoginName)
-    					 ->first();
+    	// $sUserID = $request->session()->get('sUserID');
+        if(empty($sLoginName)){
+            return view('front.front_login');
+        }
+    	$users = UserInfo::find($sUserID);
     	$now_time = date("Y-m-d H:i:s", time());
 		$now_time = strtotime($now_time);  
 		$show_time = strtotime($users->dCreateTime);  
@@ -106,6 +110,10 @@ class PersonalController extends Controller
 	            }  
 	        }  
 	    }    
+
+         // 第几位用户
+        $userNum = UserNum::where('sUserID',$sUserID)->first();
+
 	    // 讨论数量
     	$postNum = Post::where('sUserID',$sUserID)
                         ->where('iDelete','=','0')
@@ -127,15 +135,19 @@ class PersonalController extends Controller
                     ->orderby('dCreateTime','desc')
     				->get();
 
-    	return view('front.front_postList',['users' => $users,'time' => $time,'postNum' => $postNum,'linkNum' => $linkNum,'posts' => $posts]);
+    	return view('front.front_postList',['users' => $users,'time' => $time,'postNum' => $postNum,'linkNum' => $linkNum,'posts' => $posts,'userNum' => $userNum]);
     }
 
     // 链接列表
-    public function linksList(Request $request){
+    public function linksList(Request $request,$sUserID){
     	$sLoginName = $request->session()->get('sLoginName');
-    	$sUserID = $request->session()->get('sUserID');
-    	$users = UserInfo::where('sLoginName',$sLoginName)
-    					 ->first();
+    	// $sUserID = $request->session()->get('sUserID');
+
+        if(empty($sLoginName)){
+            return view('front.front_login');
+        }
+
+    	$users = UserInfo::find($sUserID);
     	$now_time = date("Y-m-d H:i:s", time());
 		$now_time = strtotime($now_time);  
 		$show_time = strtotime($users->dCreateTime);  
@@ -159,9 +171,15 @@ class PersonalController extends Controller
 	            }  
 	        }  
 	    }    
+
+        // 第几位用户
+        $userNum = UserNum::where('sUserID',$sUserID)->first();
+
 	    // 讨论数量
     	$postNum = Post::where('sUserID',$sUserID)
     					->where('iType','=','1')
+                        ->where('iDelete','=','0')
+                        
     					->count();
     	// 链接数
     	$linkNum = Post::where('sUserID',$sUserID)
@@ -179,79 +197,17 @@ class PersonalController extends Controller
     				->where('iType','=','2')
     				->get();
 
-    	return view('front.front_linkList',['users' => $users,'time' => $time,'postNum' => $postNum,'linkNum' => $linkNum,'links' => $links]);
+    	return view('front.front_linkList',['users' => $users,'time' => $time,'postNum' => $postNum,'linkNum' => $linkNum,'links' => $links,'userNum' => $userNum]);
 
     }
 
 
     // 帖子查看
     public function postView(Request $request,$sPostID){
-    	$sLoginName = $request->session()->get('sLoginName');
-    	$sUserID = $request->session()->get('sUserID');
-    	$users = UserInfo::where('sLoginName',$sLoginName)
-    					 ->first();
-    	$now_time = date("Y-m-d H:i:s", time());
-		$now_time = strtotime($now_time);  
-		$show_time = strtotime($users->dCreateTime);  
-		$dur = $now_time - $show_time;
-		$time="";
-		if ($dur < 0) {  
-	        return $the_time;  
-	    } else {  
-	        if ($dur < 60) {  
-	            $time = $dur . '秒前';  
-	        } else {  
-	            if ($dur < 3600) {  
-	                $time = floor($dur / 60) . '分钟前';  
-	            } else {  
-	                if ($dur < 86400) {  
-	                    $time = floor($dur / 3600) . '小时前';  
-	                } else {  
-	                        $time = floor($dur/(60*60*24)) . '天前';  
-	                     
-	                }  
-	            }  
-	        }  
-	    }    
-	    // 讨论数量
-    	$postNum = Post::where('sUserID',$sUserID)
-                        ->where('iDelete','=','0')
-    					->where('iType','=','1')
-    					->count();
-    	// 链接数
-    	$linkNum = Post::where('sUserID',$sUserID)
-                        ->where('iDelete','=','0')
-    					->where('iType','=','2')
-    					->count();
-    	// 帖子
-		$posts = Post::find($sPostID);
-    	
-
-    	return view('front.front_personalPost',['users' => $users,'time' => $time,'postNum' => $postNum,'linkNum' => $linkNum,'posts' => $posts]);
-    }
-
-    // 删除帖子
-    public function postDelete(Request $request){
-        $sPostID = $request->sPostID;
         $posts = Post::find($sPostID);
-        if(!empty($posts)){
-            if($posts->delete()){
-                return 1;
-            }else{
-                return 2;
-            }
-        }else{
-            return 0;
-        }
-        
-    }
+        $sUserID = $posts->sUserID;
+        $users = UserInfo::find($sUserID);
 
-    // 查看链接
-    public function linkView(Request $request,$sPostID){
-        $sLoginName = $request->session()->get('sLoginName');
-        $sUserID = $request->session()->get('sUserID');
-        $users = UserInfo::where('sLoginName',$sLoginName)
-                         ->first();
         $now_time = date("Y-m-d H:i:s", time());
         $now_time = strtotime($now_time);  
         $show_time = strtotime($users->dCreateTime);  
@@ -275,6 +231,10 @@ class PersonalController extends Controller
                 }  
             }  
         }    
+
+        // 第几位用户
+        $userNum = UserNum::where('sUserID',$sUserID)->first();
+
         // 讨论数量
         $postNum = Post::where('sUserID',$sUserID)
                         ->where('iDelete','=','0')
@@ -285,11 +245,202 @@ class PersonalController extends Controller
                         ->where('iDelete','=','0')
                         ->where('iType','=','2')
                         ->count();
-        // 帖子
+        // 点赞情况
+        $sLoginID = $request->session()->get('sUserID');
+        $isPraise = Praise::where('sPostID',$sPostID)
+                          ->where('sUserID',$sLoginID)
+                          ->first();
+        $praise = '';
+        if(empty($isPraise)){
+            $praise = '0';
+        }else{
+            $praise = '1';
+        }
+
+        // 回复
+        $replys = Reply::where('sPostID',$sPostID)
+                    ->orderby('dCreateTime','desc')
+                    ->get();
+        // 回复数
+        $replayCount = Reply::where('sPostID',$sPostID)
+                            ->count();
+
+
+        return view('front.front_personalPost',['users' => $users,'time' => $time,'postNum' => $postNum,'linkNum' => $linkNum,'posts' => $posts,'userNum' => $userNum,'praise' => $praise,'replys' => $replys,'replayCount' => $replayCount]);
+    }
+
+    // 查看链接
+    public function linkView(Request $request,$sPostID){
         $posts = Post::find($sPostID);
+        $sUserID = $posts->sUserID;
+        $users = UserInfo::find($sUserID);
+
+        $now_time = date("Y-m-d H:i:s", time());
+        $now_time = strtotime($now_time);  
+        $show_time = strtotime($users->dCreateTime);  
+        $dur = $now_time - $show_time;
+        $time="";
+        if ($dur < 0) {  
+            return $the_time;  
+        } else {  
+            if ($dur < 60) {  
+                $time = $dur . '秒前';  
+            } else {  
+                if ($dur < 3600) {  
+                    $time = floor($dur / 60) . '分钟前';  
+                } else {  
+                    if ($dur < 86400) {  
+                        $time = floor($dur / 3600) . '小时前';  
+                    } else {  
+                            $time = floor($dur/(60*60*24)) . '天前';  
+                         
+                    }  
+                }  
+            }  
+        }    
+
+        // 第几位用户
+        $userNum = UserNum::where('sUserID',$sUserID)->first();
+
+        // 讨论数量
+        $postNum = Post::where('sUserID',$sUserID)
+                        ->where('iDelete','=','0')
+                        ->where('iType','=','1')
+                        ->count();
+        // 链接数
+        $linkNum = Post::where('sUserID',$sUserID)
+                        ->where('iDelete','=','0')
+                        ->where('iType','=','2')
+                        ->count();
+
+         // 点赞情况
+        $sLoginID = $request->session()->get('sUserID');
+        $isPraise = Praise::where('sPostID',$sPostID)
+                          ->where('sUserID',$sLoginID)
+                          ->first();
+        $praise = '';
+        if(empty($isPraise)){
+            $praise = '0';
+        }else{
+            $praise = '1';
+        }
+
+        // 回复
+        $replys = Reply::where('sPostID',$sPostID)
+                    ->orderby('dCreateTime','desc')
+                    ->get();
+        // 回复数
+        $replayCount = Reply::where('sPostID',$sPostID)
+                            ->count();
+
+
         
 
-        return view('front.front_personalPost',['users' => $users,'time' => $time,'postNum' => $postNum,'linkNum' => $linkNum,'posts' => $posts]);
+        return view('front.front_personalPost',['users' => $users,'time' => $time,'postNum' => $postNum,'linkNum' => $linkNum,'posts' => $posts,'userNum' => $userNum,'praise' => $praise,'replys' => $replys,'replayCount' => $replayCount]);
     }
    
+
+    // 删除帖子
+    public function postDelete(Request $request){
+        $sPostID = $request->sPostID;
+        $posts = Post::find($sPostID);
+        if(!empty($posts)){
+            if($posts->delete()){
+                return 1;
+            }else{
+                return 2;
+            }
+        }else{
+            return 0;
+        }
+        
+    }
+
+    // 点赞帖子
+    public function praise(Request $request){
+        $sPostID = $request->sPostID;
+        $sUserID = $request->sUserID;
+
+        $praise = Praise::where('sPostID',$sPostID)
+                        ->where('sUserID',$sUserID)
+                        ->first();
+
+        $post = Post::find($sPostID);
+        if(!empty($praise)){
+            if($praise->delete()){
+                $post->iPraise = $post->iPraise-1;
+                if($post->save()){
+                    return 1;
+                }else{
+                    return 0;
+                }
+            }else{
+                return 0;
+            }
+
+        }else{
+            $praises = new Praise;
+            $praises->sPraiseID = Uuid::uuid1();
+            $praises->sPostID = $sPostID;
+            $praises->sUserID = $sUserID;
+            $praises->dCreateTime = date("Y-m-d H:i:s",time());
+
+            $post = Post::find($sPostID);
+            if($praises->save()){
+                $post->iPraise = $post->iPraise+1;
+                    if($post->save()){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+            }else{
+                return 0;
+            }
+
+        }
+ 
+    }
+
+    // 回复帖子
+    public function replay(Request $request){
+        $sPostID = $request->sPostID;
+        $sLoginID = $request->sLoginID;
+        $sPostAuthorID = $request->sPostAuthorID;
+        $sContent = $request->sContent;
+        $sContent = htmlspecialchars($sContent);
+
+        $loginUser = UserInfo::find($sLoginID);
+        $postUser = UserInfo::find($sPostAuthorID);
+        $post = Post::find($sPostID);
+
+        $reply = new Reply;
+        $reply->sReplyID = Uuid::uuid1();
+        $reply->sPostID = $sPostID;
+        $reply->sPostTitle = $post->sTitle;
+        $reply->sUserName = $postUser->sUserName;
+        $reply->sContent = $sContent;
+        $reply->sAuthor = $loginUser->sUserName;
+        $reply->iDelete = 0;
+        $reply->dCreateTime = date('Y-m-d H:i:s',time());
+        if($reply->save()){
+            if(empty($post->iReplys)){
+                $post->iReplys = 1;
+                $post->save();
+                return 1;
+            }else{
+                $post->iReplys =  $post->iReplys+1;
+                $post->save();
+
+                return 1;
+            }
+
+        }else{
+            return 0;
+        }
+
+
+
+    }
+
+    
 }

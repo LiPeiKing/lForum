@@ -86,7 +86,7 @@ span.timeago {
 					<div class="item">
 					</div>
 					<div class="item">
-						第 {{$users->iNum}} 位会员
+						第 {{$userNum->id}} 位会员
 					</div>
 					<div class="item number">
 						注册于 <span class="timeago">{{$time}}</span>
@@ -99,16 +99,16 @@ span.timeago {
 			<hr>
 			<div class="follow-info row">
 				<div class="col-xs-6">
-					<a class="counter" href="/personal/postsList">{{$postNum}}</a>
+					<a class="counter" href="/personal/postsList/{{$users->sUserID}}">{{$postNum}}</a>
 					<span class="text">讨论</span">
 				</div>
 				<div class="col-xs-6">
-					<a class="counter" href="/personal/linksList">{{$linkNum}}</a>
+					<a class="counter" href="/personal/linksList/{{$users->sUserID}}">{{$linkNum}}</a>
 					<span class="text">链接</span>
 				</div>
 			</div>
 			<hr>
-			<a class="btn btn-primary btn-block" href="/edit/info">
+			<a class="btn btn-primary btn-block" id="editInfo" href="/edit/info">
 				<i class="glyphicon glyphicon-cog"></i> 编辑个人资料
 			</a>
 		</div>
@@ -153,7 +153,7 @@ span.timeago {
 
 		<div class="panel-body">
 			@if($linkNum == 0)
-				<div class="empty-block">还未留下任何评论~~</div>
+				<div class="empty-block">没有任何数据~~</div>
 			@else 
 				<ul class="list-group">
 					@foreach($links as $link)
@@ -176,6 +176,17 @@ span.timeago {
 			@endif
 		</div>
 	</div>
-
 </div>
+<input type="hidden" id="hidsAuthor" value="{{$post->sUserID or ''}}}">
+<input type="hidden" id="hidsUserID" value="{{Session::get('sUserID')}}}">
+
+<script type="text/javascript">
+	var sAuthorID = $("#hidsAuthor").val();
+	var sUserID = $("#hidsUserID").val();
+	if(sAuthorID == sUserID){
+		$("#editInfo").show();
+	}else{
+		$("#editInfo").hide();
+	}
+</script>
 @endsection
