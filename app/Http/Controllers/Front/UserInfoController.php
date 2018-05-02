@@ -25,6 +25,9 @@ class UserInfoController extends Controller
     public function edit(Request $request){
     	$sLoginName = $request->sLoginName;
     	$sUserName = $request->sUserName;
+        if(!empty($sUserName)){
+            $request->session()->put("sUserName",$sUserName);
+        }
     	$sSex = $request->sSex;
     	$sGitHub = $request->sGitHub;
     	$sEmail = $request->sEmail;
@@ -101,8 +104,9 @@ class UserInfoController extends Controller
     	}
     }
 
-    // 退出登录
 
+
+    // 退出登录
     public function logout(Request $request){
     	$request->session()->forget("sUserID");
 		$request->session()->flush("sUserID");

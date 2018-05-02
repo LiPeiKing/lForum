@@ -28,18 +28,18 @@ textarea{
 	<div class="layui-form-item">
 	    <label class="layui-form-label">登录名：</label>
 		<div class="layui-input-inline">
-			<input class="layui-input" name="sLoginName" id="sLoginName" autocomplete="off">
+			<input class="layui-input" name="sLoginName" id="sLoginName" autocomplete="off" placeholder="请输入登录名！">
 		</div>
 		<label class="layui-form-label">用户名：</label>
 		<div class="layui-input-inline">
-			<input class="layui-input" name="sUserName" id="sUserName" autocomplete="off">
+			<input class="layui-input" name="sUserName" id="sUserName" autocomplete="off" placeholder="请输入用户名！">
 		</div>
-		<button class="layui-btn" data-type="reload">搜索</button>
+		<button class="layui-btn" data-type="reload"><i class="fa fa-search"></i> 搜索</button>
 	</div>
 </div>
 	<table class="layui-hide" id="table_post" lay-filter="useruv"></table>
 	<script type="text/html" id="barDemo">
-		<a class="layui-btn layui-btn-sm layui-btn-radius layui-btn-danger" lay-event="restore">移除</a>
+		<a class="layui-btn layui-btn-sm layui-btn-radius layui-btn-danger" lay-event="restore"><i class="fa fa-key fa-fw" style="font-size: 14px !important;"></i>移除</a>
 	</script>
 
 <script type="text/javascript">
@@ -73,7 +73,7 @@ textarea{
 			,url: '/blackList/table'
 			,cols: [[
 			{checkbox: true, fixed: true}
-			,{field:'sUserID', title: '用户ID', width:300, sort: true, fixed: true}
+			,{field:'sUserID', title: '用户ID', width:284, sort: true, fixed: true}
 			,{field:'sLoginName', title: '登录名', width:180}
 			,{field:'sUserName', title: '用户名', width:180}
 			,{field:'dCreateTime', title: '用户创建时间', width:231}
@@ -81,7 +81,7 @@ textarea{
 			]]
 			,id: 'testReload'
 			,page: true
-			,height: 388
+			,height: 420
 		});
         // 监听表格复选框
         table.on('checkbox(useruv)', function(obj){

@@ -10,6 +10,7 @@ use Ramsey\Uuid\Uuid;
 use App\Admin\UserInfo;
 use App\Admin\PostType;
 use App\Admin\Post;
+use App\Admin\Reply;
 
 class PostController extends Controller
 {
@@ -147,7 +148,17 @@ class PostController extends Controller
                 return 0;
             }
         }
+    }
 
-    	
+    // 回复初始化
+    public function replyStore(Request $request){
+        $sReplyID = $request->route('sReplyID');
+        if(!empty($sReplyID)){
+            $reply = Reply::find($sReplyID);
+            return view('front.front_editReply',['reply' => $reply]);
+        }else{
+            return view('front.front_editReply');
+
+        }
     }
 }

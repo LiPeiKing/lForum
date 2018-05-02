@@ -98,17 +98,24 @@ span.timeago {
 			</div>
 			<hr>
 			<div class="follow-info row">
-				<div class="col-xs-6">
+				<div class="col-xs-4">
 					<a class="counter" href="/personal/postsList/{{$users->sUserID}}">{{$postNum or '0'}}</a>
 					<span class="text">讨论</span">
 				</div>
-				<div class="col-xs-6">
+				<div class="col-xs-4">
 					<a class="counter" href="/personal/linksList/{{$users->sUserID}}">{{$linkNum or '0'}}</a>
 					<span class="text">链接</span>
 				</div>
+				
+				<div class="col-xs-4">
+					<a class="counter" href="/personal/replysList/{{$users->sUserID}}">{{$replyNum}}</a>
+					<span class="text">回复</span>
+				</div>
+				
 			</div>
 			<hr>
 			
+
 			@if($users->sUserID == Session::get('sUserID'))
 				<a class="btn btn-primary btn-block" id="editInfo" href="/edit/info">
 					<i class="glyphicon glyphicon-cog"></i> 编辑个人资料
@@ -151,16 +158,4 @@ span.timeago {
 		</div>
 	</div>
 </div>
-<input type="hidden" id="hidsAuthor" value="{{$link->sUserID or ''}}}">
-<input type="hidden" id="hidsUserID" value="{{Session::get('sUserID')}}}">
-
-<script type="text/javascript">
-	var sAuthorID = $("#hidsAuthor").val();
-	var sUserID = $("#hidsUserID").val();
-	if(sAuthorID == sUserID){
-		$("#editInfo").show();
-	}else{
-		$("#editInfo").hide();
-	}
-</script>
 @endsection

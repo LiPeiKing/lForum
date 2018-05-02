@@ -22,8 +22,8 @@ class ReplyController extends Controller
     	$sPostTitle = $request->sPostTitle;
 		$sAuthor = $request->sAuthor;
 
-    	$page=$request->page?:1;
-		$limit=$request->limit?:10;
+    	$page=$request->page?$request->page:1;
+		$limit=$request->limit?$request->limit:10;
 
 		$count = "0";
 		if(empty($sAuthor)){
@@ -33,8 +33,6 @@ class ReplyController extends Controller
 							->take($limit)
 							->get();
 				$count=$model::where('iDelete','!=','1')
-							->skip($limit*($page-1))
-							->take($limit)
 							->count();
 			}else{
 				$data=$model::where('iDelete','!=','1')
@@ -44,8 +42,6 @@ class ReplyController extends Controller
 							->get();
 				$count=$model::where('iDelete','!=','1')
 							->where('sPostTitle','like','%'.$sPostTitle.'%')
-							->skip($limit*($page-1))
-							->take($limit)
 							->count();
 			}	
 		}else{
@@ -57,8 +53,6 @@ class ReplyController extends Controller
 							->get();
 				$count=$model::where('iDelete','!=','1')
 							->where('sAuthor','like','%'.$sAuthor.'%')
-							->skip($limit*($page-1))
-							->take($limit)
 							->count();
 			}else{
 				$data=$model::where('iDelete','!=','1')
@@ -70,8 +64,6 @@ class ReplyController extends Controller
 				$count=$model::where('iDelete','!=','1')
 							->where('sAuthor','like','%'.$sAuthor.'%')
 							->where('sPostTitle','like','%'.$sPostTitle.'%')
-							->skip($limit*($page-1))
-							->take($limit)
 							->count();
 			}
 		}

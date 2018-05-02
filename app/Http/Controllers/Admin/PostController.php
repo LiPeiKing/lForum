@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Input;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Admin\Post;
+use App\Admin\PostType;
+use App\Admin\Reply;
+use DB;
 
 
 class PostController extends Controller
@@ -18,10 +21,6 @@ class PostController extends Controller
 		return view ('admin.admin_post');
 	}
 
-    // 查询
-	public function search(Request $request){
-
-	}
     // json数据返回
 	public function table(Request $request){
 
@@ -34,8 +33,8 @@ class PostController extends Controller
 		$sTitle = $request->sTitle;
 		$sAuthor = $request->sAuthor;
 
-		$page=$request->page?:1;
-		$limit=$request->limit?:10;
+		$page=$request->page?$request->page:1;
+		$limit=$request->limit?$request->limit:10;
 
 		$count = "0";
 		if(empty($sTitle)){
@@ -45,11 +44,7 @@ class PostController extends Controller
 							->take($limit)
 							->get();
 				$count=$model::where('iDelete','!=','1')
-							->skip($limit*($page-1))
-							->take($limit)
 							->count();
-
-
 			}else{
 				$data=$model::where('iDelete','!=','1')
 						 ->where('sAuthor','like','%'.$sAuthor.'%')
@@ -58,8 +53,6 @@ class PostController extends Controller
 						 ->get();
 				$count=$model::where('iDelete','!=','1')
 						 ->where('sAuthor','like','%'.$sAuthor.'%')
-						 ->skip($limit*($page-1))
-						 ->take($limit)
 						 ->count();
 			}
 			
@@ -72,8 +65,6 @@ class PostController extends Controller
 						 ->get();
 				$count=$model::where('iDelete','!=','1')
 						 ->where('sTitle','like','%'.$sTitle.'%')
-						 ->skip($limit*($page-1))
-						 ->take($limit)
 						 ->count();
 			}else{
 				$data=$model::where('iDelete','!=','1')
@@ -85,8 +76,6 @@ class PostController extends Controller
 				$count=$model::where('iDelete','!=','1')
 						 ->where('sTitle','like','%'.$sTitle.'%')
 						 ->where('sAuthor','like','%'.$sAuthor.'%')
-						 ->skip($limit*($page-1))
-						 ->take($limit)
 						 ->count();
 			}
 			
@@ -100,12 +89,30 @@ class PostController extends Controller
 		];
 	}
 
-	// table信息查看
-	public function view(Request $request){
-		// $posts = new Post;
-		// $id = Input::get("id");
-		// $posts = UserInfo::find($id);
-		return 1;
+	// table 帖子信息查看
+	public function view(Request $request,$sPostID){
+		$npost = Post::find($sPostID);
+		if(!empty($npost->sPostTypeID)){
+			//链接查询
+			$posts = DB::table('post')
+				->leftjoin('posttype','post.sPostTypeID','=','posttype.id')
+				->select('post.*','posttype.sName')
+				->where('sPostID',$sPostID)
+				->where('iType','=','1')
+                ->where('iDelete','=','0')
+				->first();
+			return view('admin.admin_postView',['posts' =>$posts]);
+
+		}else{
+			return view('admin.admin_postView',['posts' =>$npost]);
+		}
+	}
+
+	// table 回复查看
+	public function replyView(Request $request,$sReplyID){
+		$reply = Reply::find($sReplyID);
+
+		return view('admin.admin_replyView',['reply' => $reply]);
 	}
 
 	// public function getRoleOrPermissionApi($request,$model)

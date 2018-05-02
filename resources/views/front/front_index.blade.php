@@ -3,6 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>论坛</title>
+	<link rel="shortcut icon" href="{{asset('./front/images/logohead.ico')}}" />
 </head>
 <meta name="token" content="{{ csrf_token() }}"/>
 <link rel="stylesheet" href="{{asset('./front/css/bootstrap.min.css')}}">
@@ -10,6 +11,7 @@
 <link rel="stylesheet" href="{{asset('./front/css/bootstrapValidator.min.css')}}">
 <link rel="stylesheet" href="{{asset('./front/css/main.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('./front/dist/summernote.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('./front/css/font-awesome.min.css')}}">
 
 <script src="{{asset('./front/js/jquery-3.2.1.min.js')}}"></script>
 <script src="{{asset('./front/js/bootstrap.min.js')}}"></script>
@@ -17,6 +19,7 @@
 <script src="{{asset('./front/js/jquery-confirm.js')}}"></script>
 <script src="{{asset('./front/dist/summernote.js')}}"></script>
 <script src="{{asset('./front/dist/lang/summernote-zh-CN.js')}}"></script>
+<script src="{{asset('./front/js/jqPaginator.js')}}"></script>
 
 
 <style type="text/css">
@@ -98,12 +101,13 @@
 			</div>
 
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<form class="navbar-form navbar-left">
+				<form class="navbar-form navbar-left" action="/search" method="post">
 					<div class="form-group">
 						<div class="input-group">
-							<input type="text" class="form-control" placeholder="搜索">
+							<input type="hidden" name="_token" value="{{csrf_token()}}"/>
+							<input type="text" class="form-control" name="search" id="search" placeholder="搜索">
 							<span class="input-group-btn">
-								<button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+								<button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
 							</span>
 						</div>
 					</div>
@@ -136,6 +140,13 @@
 										<i class="glyphicon glyphicon-cog"></i>&nbsp;&nbsp;&nbsp;&nbsp;编辑资料
 									</a>
 								</li>
+								@if(Session::get('sRole') != "普通用户")
+									<li class="text-center">
+										<a class="button" href="/postList">
+											<i class="fa fa-external-link-square"></i> &nbsp;&nbsp;&nbsp;前往后台
+										</a>
+									</li>
+								@endif
 								<li class="text-center">
 									<a id="logout" class="button" href="javascript:;">
 										<i class="glyphicon glyphicon-log-out"></i>&nbsp;&nbsp;&nbsp;&nbsp;退出登陆
@@ -176,7 +187,7 @@
 						</div>
 
 						<div class="panel-body">
-							<ul class="list-group row topic-list">
+							<ul class="list-group row topic-list" id="main">
 								<!-- 此处为了在后面的继承模板中不出错 -->
 								@if(!empty($postall))
 									@foreach($postall as $postalleach)
@@ -188,7 +199,7 @@
 										        <div class="media-heading">
 													@if($postalleach->iType == '1')
 														<i class="glyphicon glyphicon-list-alt" style="padding-right: 3px;" title="发表新帖"></i>
-														<a href="javascript:;">
+														<a href="/view/personal/{{$postalleach->sUserID}}">
 											                {{$postalleach->sAuthor or $postalleach->sLoginName }}	&nbsp;
 											            </a>
 
@@ -198,7 +209,7 @@
 										                </a>
 													@else
 														<i class="glyphicon glyphicon-link" style="padding-right: 3px;" title="分享链接"></i>
-														<a href="javascript:;">
+														<a href="/view/personal/{{$postalleach->sUserID}}">
 											                {{$postalleach->sAuthor or $postalleach->sLoginName }}	&nbsp;
 											            </a>
 
@@ -227,7 +238,7 @@
 										        <div class="media-heading">
 													@if($personalPost->iType == '1')
 														<i class="glyphicon glyphicon-list-alt" style="padding-right: 3px;" title="发表新帖"></i>
-														<a href="javascript:;">
+														<a href="/view/personal/{{$personalPost->sUserID}}">
 											                {{$personalPost->sAuthor or $personalPost->sLoginName }}	&nbsp;
 											            </a>
 
@@ -237,8 +248,8 @@
 										                </a>
 													@else
 														<i class="glyphicon glyphicon-link" style="padding-right: 3px;" title="分享链接"></i>
-														<a href="javascript:;">
-											                {{$personalPost->sAuthor or $personalPost->sLoginName }}	&nbsp;
+														<a href="/view/personal/{{$personalPost->sUserID}}">
+											                {{$personalPost->sAuthor or $personalPost->sLoginName }}&nbsp;
 											            </a>
 
 											                分享了&nbsp;
@@ -260,7 +271,10 @@
 									<div class="empty-block">没有任何数据~~</div>
 								@endif
 								
+							</ul>
 
+							<ul class="pagination pull-right" id="pag">
+								
 							</ul>
 						</div>
 					</div>
@@ -291,9 +305,15 @@
 							<h3 class="panel-title">友情链接</h3>
 						</div>
 						<div class="panel-body text-center">
-							<a href="https://ruby-china.org" target="_blank" rel="nofollow" title="Ruby China" style="padding: 3px;line-height: 40px;">
-								<img src="https://lccdn.phphub.org/assets/images/friends/ruby-china.png" style="width:150px; margin: 3px 0;">
-							</a>
+							@if(!empty($links))
+								@foreach($links as $link)
+									<a href="{{$link->sLinkAddress}}" target="_blank" rel="nofollow" title="{{$link->sLinkName}}" style="padding: 3px;line-height: 40px;">
+										<img src="{{$link->sLinkImg}}" style="width:150px; margin: 3px 0;">
+									</a>
+								@endforeach
+							@endif
+							
+
 						</div>
 					</div>
 					<!-- 推荐资源 -->
@@ -303,54 +323,17 @@
 						</div>
 						<div class="panel-body">
 							<ul class="list list-group" id="sidebar-resources">
-								<li class="list-group-item ">
-									<a href="http://d.laravel-china.org/" class="no-pjax" target="&quot;_blank&quot;" title="Laravel 中文文档">
-										<img class="media-object inline-block " src="https://lccdn.phphub.org/uploads/banners/ql9XtosRhTe4v8HVC3TV.jpg">
-										Laravel 中文文档
-									</a>
-								</li>
-								<li class="list-group-item ">
-									<a href="https://cs.laravel-china.org/" class="no-pjax" target="&quot;_blank&quot;" title="Laravel 速查表">
-										<img class="media-object inline-block " src="https://lccdn.phphub.org/uploads/banners/cV55gsrH70qz6VdKr502.jpg">
-										Laravel 速查表
-									</a>
-								</li>
-								<li class="list-group-item ">
-									<a href="https://laravel-china.github.io/php-the-right-way/" class="no-pjax" target="&quot;_blank&quot;" title="《PHP 之道》">
-										<img class="media-object inline-block " src="https://lccdn.phphub.org/uploads/banners/vA50AYuscu2RCMowq7ee.png">
-										《PHP 之道》
-									</a>
-								</li>
-								<li class="list-group-item ">
-									<a href="https://laravel-china.org/composer" class="no-pjax" target="&quot;_blank&quot;" title="Composer 中文镜像">
-										<img class="media-object inline-block " src="https://lccdn.phphub.org/uploads/banners/KltcLb6leMa12dvTAxD7.png">
-										Composer 中文镜像
-									</a>
-								</li>
-								<li class="list-group-item ">
-									<a href="https://laravel-china.org/topics/2530/the-highest-amount-of-downloads-of-the-100-laravel-extensions-recommended" class="no-pjax" target="&quot;_blank&quot;" title="Laravel 扩展 Top100">
-										<img class="media-object inline-block " src="https://lccdn.phphub.org/uploads/banners/i8eVQdOiRqfK5uOEjULq.png">
-										Laravel 扩展 Top100
-									</a>
-								</li>
-								<li class="list-group-item ">
-									<a href="https://laravel-china.org/docs/laravel-specification" class="no-pjax" target="&quot;_blank&quot;" title="Laravel 开发规范">
-										<img class="media-object inline-block " src="https://lccdn.phphub.org/uploads/banners/slO0QIXjwi1Qmz8PIrgc.png">
-										Laravel 开发规范
-									</a>
-								</li>
-								<li class="list-group-item ">
-									<a href="https://laravel-china.org/topics/7227/laravel-introductory-guide" class="no-pjax" target="&quot;_blank&quot;" title="Laravel 新手入门指南">
-										<img class="media-object inline-block " src="https://lccdn.phphub.org/uploads/banners/ranAAzKyvJdx1Cpj0LKH.png">
-										Laravel 新手入门指南
-									</a>
-								</li>
-								<li class="list-group-item ">
-									<a href="https://laravel-china.org/categories/1" class="no-pjax" target="&quot;_blank&quot;" title="Laravel / PHP 工作">
-										<img class="media-object inline-block " src="https://lccdn.phphub.org/uploads/banners/vCE4hPLqVg9bBYnPYkZJ.png">
-										Laravel / PHP 工作
-									</a>
-								</li>
+								@if(!empty($resources))
+									@foreach($resources as $resource)
+										<li class="list-group-item ">
+											<a href="{{$resource->sLinkAddress}}" class="no-pjax" target="&quot;_blank&quot;" title="{{$resource->sLinkName}}">
+												<img class="media-object inline-block " src="{{$resource->sLinkImg}}">
+												{{$resource->sLinkName}}
+											</a>
+										</li>
+									@endforeach
+								@endif
+								
 							</ul>
 						</div>
 					</div>
@@ -358,14 +341,58 @@
 			@show
 		</div>
 	</div>
+
 	<input type="hidden" id="hidsLoginID" value="{{Session::get('sUserID')}}">
 
 
 </body>
 <script>
 	$(function(){
-	
+
+		$("#pag").jqPaginator({
+	      	totalCounts:{{$count or '10'}},
+	      	pageSize:10,
+		    // disableClass:'disabled',
+		    currentPage: {{$page or 1}},
+	      	first: '<li class="first"><a href="javascript:void(0);">首页</a></li>',
+	      	last: '<li class="last"><a href="javascript:void(0);">尾页</a></li>',
+	      	page: '<li class="page"><a href="javascript:void(0);">\{\{page\}\}</a></li>',
+	      	onPageChange: function (num, type) {
+	      		// console.log(num);
+	      		// console.log(type);
+	      		if(type != "init"){
+	      			location.href = "/page/"+num;
+
+	      		}
+
+	   //    		$.ajax({
+				// 	type: 'POST',
+				// 	url: '/page',
+				// 	data: '{"num":"'+num+'"}',
+				// 	contentType: "application/json",
+				// 	headers: {
+				// 		'X-CSRF-TOKEN': $('meta[name="token"]').attr("content")
+				// 	},
+				// 	success: function(data){
+						
+				// 	},
+				// 	error: function(xhr, type){
+						
+
+				// 	}
+
+				// });
+
+
+
+
+
+
+	      	}
+		});
 	});
+
+
 	$("#logout").on('click',function(){
 			$.confirm({
 			    title: '提示：',

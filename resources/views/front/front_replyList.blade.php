@@ -111,6 +111,7 @@ span.timeago {
 					<a class="counter" href="/personal/replysList/{{$users->sUserID}}">{{$replyNum}}</a>
 					<span class="text">回复</span>
 				</div>
+			
 				
 			</div>
 			<hr>
@@ -125,27 +126,28 @@ span.timeago {
 
 <!-- 右侧 -->
 <div class="col-md-9">
+	<!-- 回复 -->
 	<div class="panel panel-default">
 		<div class="panel-heading text-center" style="background-color: #ffffff !important;">
-			<i class="glyphicon glyphicon-pencil" aria-hidden="true"></i> 最近发起的讨论
+			<i class="fa fa-comments-o" aria-hidden="true"></i> 最近的回复
 		</div>
+
 		<div class="panel-body">
-			@if($postNum == 0)
-				<div class="empty-block">没有任何数据~~</div>
-			@else
+			@if($replyNum == 0)
+				<div class="empty-block">还没有任何回复呦~~</div>
+			@else 
 				<ul class="list-group">
-					@foreach($posts as $post)
-					<li class="list-group-item"> 
-						<a href="/personal/post/{{$post->sPostID}}" title="{{$post->sTitle}}" class="">
-							{{$post->sTitle}}
-						</a>
+					@foreach($replys as $reply)
+					<li class="list-group-item"> 对
+						<a href="/personal/reply/{{$reply->sReplyID}}" title="{{$reply->sPostTitle}}的回复" class="">
+							{{$reply->sPostTitle}}
+						</a>的回复
 						<span class="meta pull-right">
 				            <i class="glyphicon glyphicon-tag"></i>
-					        <span> {{$post->sName}}&nbsp;</span>
-					        <i class="glyphicon glyphicon-thumbs-up"></i>
-					        <span> {{$post->iPraise or '1'}} &nbsp;</span>
+					        <span>回复</span>
 					        <i class="glyphicon glyphicon-calendar"></i>
-					        <span class="timeago">{{$post->dCreateTime}}</span>
+
+					        <span class="timeago">{{$reply->dCreateTime}}</span>
 					    </span>
 					</li>
 					@endforeach
@@ -154,16 +156,5 @@ span.timeago {
 		</div>
 	</div>
 </div>
-<input type="hidden" id="hidsAuthor" value="{{$post->sUserID or ''}}}">
-<input type="hidden" id="hidsUserID" value="{{Session::get('sUserID')}}}">
 
-<script type="text/javascript">
-	var sAuthorID = $("#hidsAuthor").val();
-	var sUserID = $("#hidsUserID").val();
-	if(sAuthorID == sUserID){
-		$("#editInfo").show();
-	}else{
-		$("#editInfo").hide();
-	}
-</script>
 @endsection

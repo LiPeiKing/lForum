@@ -35,7 +35,6 @@ class BlackListController extends Controller
 							->get();
 				$count=$model::where('iState','=','1')
 							->where('sRoleID','=','6473d619-4441-11e8-bf5b-6031d59b89dd')
-							->skip($limit*($page-1))
 							->take($limit)
 							->count();
 			}else{
@@ -48,7 +47,6 @@ class BlackListController extends Controller
 				$count=$model::where('iState','=','1')
 							->where('sRoleID','=','6473d619-4441-11e8-bf5b-6031d59b89dd')
 							->where('sUserName','like','%'.$sUserName.'%')
-							->skip($limit*($page-1))
 							->take($limit)
 							->count();
 			}	
@@ -63,7 +61,6 @@ class BlackListController extends Controller
 				$count=$model::where('iState','=','1')
 							->where('sRoleID','=','6473d619-4441-11e8-bf5b-6031d59b89dd')
 							->where('sLoginName','like','%'.$sLoginName.'%')
-							->skip($limit*($page-1))
 							->take($limit)
 							->count();
 			}else{
@@ -78,7 +75,6 @@ class BlackListController extends Controller
 							->where('sRoleID','=','6473d619-4441-11e8-bf5b-6031d59b89dd')
 							->where('sLoginName','like','%'.$sLoginName.'%')
 							->where('sUserName','like','%'.$sUserName.'%')
-							->skip($limit*($page-1))
 							->take($limit)
 							->count();
 			}

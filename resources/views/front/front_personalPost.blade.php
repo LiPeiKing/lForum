@@ -105,17 +105,22 @@
 			</div>
 			<hr>
 			<div class="follow-info row">
-				<div class="col-xs-6">
+				<div class="col-xs-4">
 					<a class="counter" href="/personal/postsList/{{$users->sUserID}}">{{$postNum or ''}}</a>
 					<span class="text">讨论</span">
 				</div>
-				<div class="col-xs-6">
+				<div class="col-xs-4">
 					<a class="counter" href="/personal/linksList/{{$users->sUserID}}">{{$linkNum or ''}}</a>
 					<span class="text">链接</span>
 				</div>
+				<div class="col-xs-4">
+					<a class="counter" href="/personal/replysList/{{$users->sUserID}}">{{$replyNum}}</a>
+					<span class="text">回复</span>
+				</div>
+			
 			</div>
 			<hr>
-			@if($posts->sUserID == Session::get('sUserID'))
+			@if($users->sUserID == Session::get('sUserID'))
 				<a class="btn btn-primary btn-block" id="editInfo" href="/edit/info">
 					<i class="glyphicon glyphicon-cog"></i> 编辑个人资料
 				</a>
@@ -184,7 +189,7 @@
 	<div class=" panel panel-default " id="replies">
 
 	    <div class="panel-heading" style="background-color: #ffffff !important;">
-	        <div class="total">回复数量: <b>{{$replayCount or '0'}}</b> </div>
+	        <div class="total">回复数量: <b>{{$replyCount or '0'}}</b> </div>
 	    </div>
 
 	    <div class="panel-body">
@@ -264,9 +269,8 @@
 </div>
 
 
-
-
 <input type="hidden" id="content" value="{{$posts->sContent}}">
+<input type="hidden" id="sLoginID" value="{{$posts->sContent}}">
 
 <script type="text/javascript">
 	$(function () {
@@ -298,6 +302,7 @@
 
 		// 处理点赞按钮加载样式
 		var isPraise = $("#hidisPraise").val();
+		var sLoginID = $("#hidsLoginID").val();
 		if(isPraise == '1'){
 			$("#praise").attr("class","btn btn-success");
 			$("#praise").text("已点赞");
@@ -422,6 +427,9 @@
 	  	$("#praise").on('click',function(){
 	  		var sPostID = $("#sPostID").val();
 	  		var sUserID = $("#hidsLoginID").val();
+	  		if(sUserID == ""){
+	  			window.location.href = "/front/login";
+	  		}
 	  		
 	  		$.ajax({
 				type: 'POST',
@@ -455,6 +463,9 @@
 	  		var sLoginID = $("#hidsLoginID").val(); 
 	  		var sPostAuthorID = $("#hidsAuthorID").val();
 	  		var sContent = $('#summernote').summernote('code');
+	  		if(sLoginID == ""){
+	  			window.location.href = "/front/login";
+	  		}
 	  		if(sContent == "<p><br></p>"){
 	  			$.dialog({
 					title:'',
@@ -480,7 +491,12 @@
 					success: function(data){
 						console.log(data);
 						if(data == 1){
-							location.reload();
+							$.dialog({
+								title:'',
+								content: '<div style="text-align:center">回复成功！</div>',
+							});
+							setTimeout("location.reload();",1500);
+							
 						}
 					},
 					error: function(xhr, type){

@@ -33,7 +33,6 @@
 				<div class="col-sm-12">
 					<div id="summernote" class="col-sm-12"></div>
 				</div>
-				<input id="contents"></input>
 			</div>
 				
 			
@@ -173,10 +172,6 @@
 
 			});
 		}
-		
-
-		
-
 	});
 
 });

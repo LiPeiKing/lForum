@@ -58,25 +58,30 @@ class CheckController extends Controller
     	$users = new UserInfo;
         $userNum = new UserNum;
 
-        $sUserID = Uuid::uuid1();
-
-    	$users->sUserID = $sUserID;
-    	$users->sRoleID = '6473d619-4441-11e8-bf5b-6031d59b89dd';
-    	$users->sLoginName = $request->sLoginName;
-    	$users->sPassword = $request->sPassword;
-    	$users->iState = "0";
-    	$users->sAlias = '0';
-    	$users->sEmail = $request->sEmail;
-        $users->dCreateTime = date("Y-m-d H:i:s", time());
-        $userNum->sUserID = $sUserID;
-       
-    	if($users->save() && $userNum->save()){    
-            
-    		$msg = "1";
-    		return view('front.front_registor',['msg' => $msg]); 
-    	}else{
-    		$msg = "0";
-    		return view('front.front_registor',['msg' => $msg]); 
-    	}
+        $ouser = UserInfo::where('sLoginName',$request->sLoginName)->first();
+        if(!empty($ouser)){
+            $msg = '2';
+            return view('front.front_registor',['msg' => $msg]); 
+        }else{
+            $sUserID = Uuid::uuid1();
+            $users->sUserID = $sUserID;
+            $users->sRoleID = '6473d619-4441-11e8-bf5b-6031d59b89dd';
+            $users->sLoginName = $request->sLoginName;
+            $users->sPassword = $request->sPassword;
+            $users->iState = "0";
+            $users->sAlias = '0';
+            $users->sEmail = $request->sEmail;
+            $users->dCreateTime = date("Y-m-d H:i:s", time());
+            $userNum->sUserID = $sUserID;
+           
+            if($users->save() && $userNum->save()){    
+                
+                $msg = "1";
+                return view('front.front_registor',['msg' => $msg]); 
+            }else{
+                $msg = "0";
+                return view('front.front_registor',['msg' => $msg]); 
+            }
+        }
     }
 }

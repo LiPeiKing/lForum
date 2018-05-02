@@ -35,15 +35,15 @@
 		<div class="layui-input-inline">
 			<input class="layui-input" name="sUserName" placeholder="请输入用户名" id="sUserName" autocomplete="off">
 		</div>
-		<button class="layui-btn" data-type="reload">搜索</button>
+		<button class="layui-btn" data-type="reload"><i class="fa fa-search"></i> 搜索</button>
 	</div>
 </div>
 <!-- 表格 -->
 <table class="layui-hide" id="table_post" lay-filter="useruv"></table>
 <script type="text/html" id="barDemo">
-	<a class="layui-btn layui-btn-sm layui-btn-radius layui-btn-primary" lay-event="view">查看</a>
-	<a class="layui-btn layui-btn-sm layui-btn-radius" lay-event="edit">编辑</a>
-	<a class="layui-btn layui-btn-sm layui-btn-radius layui-btn-danger" lay-event="del">拉黑</a>
+	<a class="layui-btn layui-btn-sm layui-btn-radius layui-btn-primary" lay-event="view"><i class="fa fa-eye fa-fw" style="font-size: 14px !important;"></i>查看</a>
+	<a class="layui-btn layui-btn-sm layui-btn-radius" lay-event="edit"><i class="fa fa-edit fa-fw" style="font-size: 14px !important;"></i>编辑</a>
+	<a class="layui-btn layui-btn-sm layui-btn-radius layui-btn-danger" lay-event="del"><i class="fa fa-lock fa-fw" style="font-size: 14px !important;"></i> 拉黑</a>
 </script>
 
 <!-- 查看页面 -->
@@ -98,15 +98,15 @@
 			,url: '/common/table'
 			,cols: [[
 			{checkbox: true, fixed: true}
-			,{field:'sUserID', title: '用户ID', width:300, sort: true, fixed: true}
+			,{field:'sUserID', title: '用户ID', width:265, sort: true, fixed: true}
 			,{field:'sLoginName', title: '登录名', width:180}
-			,{field:'sUserName', title: '用户名', width:180}
+			,{field:'sUserName', title: '用户名', width:151}
 			,{field:'dCreateTime', title: '用户创建时间', width:231}
-			,{field:'right', title: '操作', width:200,toolbar:"#barDemo"}
+			,{field:'right', title: '操作', width:246,toolbar:"#barDemo"}
 			]]
 			,id: 'testReload'
 			,page: true
-			,height: 388
+			,height: 420
 		});
         // 监听表格复选框
         table.on('checkbox(useruv)', function(obj){

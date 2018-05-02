@@ -27,6 +27,9 @@ class LoginController extends Controller
     			if($user->sPassword == $request->input('logpassword')){
     				$request->session()->put('sLoginName',$request->input('logname'));
                     $request->session()->put('sUserID',$user->sUserID);
+                    $request->session()->put('sUserName',$user->sUserName);
+                    $request->session()->put('sRole',"admin");
+
 
                     // $logs = new Log;
                     // //获取上次登录日志
@@ -52,6 +55,7 @@ class LoginController extends Controller
                     if($user->sPassword == $request->input('logpassword')){
                         $request->session()->put('sLoginName',$request->input('logname'));
                         $request->session()->put('sUserID',$user->sUserID);
+                        $request->session()->put('sUserName',$user->sUserName);
                         $request->session()->put('sRole','root');
                         return view('admin.admin_index');
                     }

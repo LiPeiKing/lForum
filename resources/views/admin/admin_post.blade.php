@@ -26,15 +26,15 @@ textarea{
 
 <div class="demoTable">
 	<div class="layui-form-item">
-	    <label class="layui-form-label">标题：</label>
+	    <label class="layui-form-label" style="width: 170px;">标题：</label>
 		<div class="layui-input-inline">
-			<input class="layui-input" name="sTitle" id="sTitle" autocomplete="off">
+			<input class="layui-input" name="sTitle" id="sTitle" autocomplete="off" placeholder="请输入帖子标题">
 		</div>
 		<label class="layui-form-label">作者：</label>
 		<div class="layui-input-inline">
-			<input class="layui-input" name="sAuthor" id="sAuthor" autocomplete="off">
+			<input class="layui-input" name="sAuthor" id="sAuthor" autocomplete="off" placeholder="请输入作者">
 		</div>
-		<button class="layui-btn" data-type="reload">搜索</button>
+		<button class="layui-btn" data-type="reload"><i class="fa fa-search"></i> 搜索</button>
 	</div>
 </div>
 
@@ -77,9 +77,9 @@ textarea{
 
 	<table class="layui-hide" id="table_post" lay-filter="useruv"></table>
 	<script type="text/html" id="barDemo">
-		<a class="layui-btn layui-btn-sm layui-btn-radius layui-btn-primary" lay-event="view">查看</a>
-		<a class="layui-btn layui-btn-sm layui-btn-radius" lay-event="edit">编辑</a>
-		<a class="layui-btn layui-btn-sm layui-btn-radius layui-btn-danger" lay-event="del">删除</a>
+		<a class="layui-btn layui-btn-sm layui-btn-radius layui-btn-primary" lay-event="view"><i class="fa fa-eye fa-fw" style="font-size: 14px !important;"></i>查看</a>
+		<a class="layui-btn layui-btn-sm layui-btn-radius" lay-event="edit"><i class="fa fa-edit fa-fw" style="font-size: 14px !important;"></i>编辑</a>
+		<a class="layui-btn layui-btn-sm layui-btn-radius layui-btn-danger" lay-event="del"><i class="fa fa-trash-o fa-fw" style="font-size: 14px !important;"></i>删除</a>
 	</script>
 
 	<div class="layui-container" id="view" style="width: 700px;height: 480px;margin-top: 20px;display: none;">
@@ -95,8 +95,14 @@ textarea{
 		</div>
 		<div class="layui-form-item">
 			<label class="layui-form-label">内容:</label>
-			<div class="layui-col-md9">
-				<textarea name="desc" id="sContent" disabled class="layui-textarea"></textarea>
+			<div class="layui-col-md9" id="sContent">
+
+
+
+				<!-- <textarea name="desc" id="sContent" disabled class="layui-textarea"></textarea> -->
+				<!-- <div id="summernote" class="col-sm-12"></div> -->
+
+
 			</div>
 		</div>
 
@@ -108,6 +114,7 @@ textarea{
 	  
 	  //后面就跟你平时使用jQuery一样
 	  $(function(){
+
 	  	$("#content").addClass("layui-nav-itemed");
 	  	$("#content dl dd").eq(0).addClass("layui-this");
 	  }); 
@@ -156,16 +163,16 @@ textarea{
 			,url: '/table/post'
 			,cols: [[
 			{checkbox: true, fixed: true}
-			,{field:'sPostID', title: 'ID', width:290, sort: true, fixed: true}
-			,{field:'sTitle', title: '帖子标题', width:200}
-			,{field:'iType', title: '类别', width:150}
+			,{field:'sPostID', title: '帖子ID', width:251, sort: true, fixed: true}
+			,{field:'sTitle', title: '帖子标题', width:240}
+			// ,{field:'sPostTypeID', title: '类别', width:150}
 			,{field:'sAuthor', title: '作者', width:150}
-			,{field:'dCreateTime', title: '创建时间', width:100}
-			,{field:'right', title: '操作', width:200,toolbar:"#barDemo"}
+			,{field:'dCreateTime', title: '创建时间', width:189}
+			,{field:'right', title: '操作', width:244,toolbar:"#barDemo"}
 			]]
 			,id: 'testReload'
 			,page: true
-			,height: 388
+			,height: 420
 		});
         // 监听表格复选框
         table.on('checkbox(useruv)', function(obj){
@@ -179,22 +186,26 @@ textarea{
         	// 绑定显示页面的数据
         	$("#view #sTitle").val(data.sTitle);
         	$("#view #sAuthor").val(data.sAuthor);
-        	$("#view #sContent").text(data.sContent);
+        	$("#view #sContent").append(data.sContent);
         	if(obj.event === 'view'){
-        		layer.open({
-        			type: 1,
-        			title: false,
-        			closeBtn: 0,
-        			area: ['700px', '500px'],
-        			scrollbar: false,
-        			shadeClose: true,
-        			scrollbar: false,
-        			content: $("#view"),
-        			success:function(layero){  
-        				var mask = $(".layui-layer-shade");  
-        				mask.appendTo(layero.parent());  
-        			} 
-        		});
+        		// layer.open({
+        		// 	type: 1,
+        		// 	title: false,
+        		// 	closeBtn: 0,
+        		// 	area: ['700px', '500px'],
+        		// 	scrollbar: false,
+        		// 	shadeClose: true,
+        		// 	scrollbar: false,
+        		// 	content: $("#view"),
+        		// 	success:function(layero){  
+        		// 		var mask = $(".layui-layer-shade");  
+        		// 		mask.appendTo(layero.parent());  
+        		// 	} 
+        		// });
+
+        		location.href = "/post/view/"+data.sPostID;
+
+
         	} else if(obj.event === 'del'){
         		layer.confirm('确定删除这条数据么',{ icon: 3}, function(index){
         			console.log(data.sPostID);

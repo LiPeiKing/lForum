@@ -135,6 +135,12 @@
 			$("#success").attr("class","alert alert-success");
 			$("#panel").attr("class","hidden");
 		}
+		if(msg=="2"){
+			$.alert({
+			    title: '提示!',
+			    content: '登录名已经被注册了呦!',
+			});
+		}
 	});
 
 </script>

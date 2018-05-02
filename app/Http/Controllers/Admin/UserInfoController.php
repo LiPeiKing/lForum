@@ -40,6 +40,32 @@ class UserInfoController extends Controller
 		$user = UserInfo::find($id);
 		return view('admin.admin_basicInfo',['user' => $user]);
 	} 
+	// 安全设置
+    public function setting(Request $request){
+
+        return view('admin.admin_setting');
+
+    }
+    // 修改密码
+    public function passwordEdit(Request $request){
+    	$usedpassword = $request->usedpassword;
+    	$password = $request->password;
+    	$sUserID = $request->session()->get("sUserID");
+    	$user = UserInfo::find($sUserID);
+
+    	if($usedpassword != $user->sPassword){
+    		return 2;
+    	}else{
+    		$user->sPassword = $password;
+    		if($user->save()){
+    			return 1;
+    		}else{
+    			return 0;
+    		}
+
+    	}
+    }
+
 
 	// 退出登录
 	public function logout(Request $request){
@@ -47,7 +73,8 @@ class UserInfoController extends Controller
 		$request->session()->flush("sUserID");
 		$request->session()->forget("sLoginName");
 		$request->session()->flush("sLoginName");
-		return view('admin.admin_login');
+		// return view('admin.admin_login');
+		return 1;
 	}
 }
 

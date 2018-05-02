@@ -26,20 +26,20 @@ textarea{
 
 <div class="demoTable">
 	<div class="layui-form-item">
-	    <label class="layui-form-label">标题：</label>
+	    <label class="layui-form-label" style="width: 170px;">标题：</label>
 		<div class="layui-input-inline">
-			<input class="layui-input" name="sTitle" id="sTitle" autocomplete="off">
+			<input class="layui-input" name="sTitle" id="sTitle" autocomplete="off" placeholder="请输入标题！">
 		</div>
 		<label class="layui-form-label">作者：</label>
 		<div class="layui-input-inline">
-			<input class="layui-input" name="sAuthor" id="sAuthor" autocomplete="off">
+			<input class="layui-input" name="sAuthor" id="sAuthor" autocomplete="off" placeholder="请输入作者！">
 		</div>
-		<button class="layui-btn" data-type="reload">搜索</button>
+		<button class="layui-btn" data-type="reload"><i class="fa fa-search"></i> 搜索</button>
 	</div>
 </div>
 	<table class="layui-hide" id="table_post" lay-filter="useruv"></table>
 	<script type="text/html" id="barDemo">
-		<a lay-event="restore"><input type="checkbox" name="close" lay-skin="switch" lay-text="恢复|删除"></a>
+		<a lay-event="restore" class="layui-btn layui-btn-sm layui-btn-radius layui-btn-danger"><i class="fa fa-reply fa-fw" style="font-size: 14px !important;"></i>恢复 </a>
 	</script>
 
 <script type="text/javascript">
@@ -62,6 +62,7 @@ textarea{
 	  form.on('submit(search)', function(data){
 	  	return false;
 	  });
+
 	});
 
 	// 加载table模块
@@ -73,20 +74,20 @@ textarea{
 			,url: '/recycle/table'
 			,cols: [[
 			{checkbox: true, fixed: true}
-			,{field:'sPostID', title: 'ID', width:290, sort: true, fixed: true}
-			,{field:'sTitle', title: '帖子标题', width:200}
-			,{field:'iType', title: '类别', width:150}
+			,{field:'sPostID', title: '帖子ID', width:296, sort: true, fixed: true}
+			,{field:'sTitle', title: '帖子标题', width:240}
+			// ,{field:'iType', title: '类别', width:150}
 			,{field:'sAuthor', title: '作者', width:150}
-			,{field:'dCreateTime', title: '创建时间', width:100}
+			,{field:'dCreateTime', title: '创建时间', width:189}
 			,{field:'right', title: '帖子状态', width:200,toolbar:"#barDemo"}
 			]]
 			,id: 'testReload'
 			,page: true
-			,height: 388
+			,height: 420
 		});
         // 监听表格复选框
         table.on('checkbox(useruv)', function(obj){
-        	console.log(obj)
+        	// console.log(obj)
         });
         //监听工具条
         table.on('tool(useruv)', function(obj){
@@ -94,7 +95,6 @@ textarea{
         	var data = obj.data;
 			if(obj.event === 'restore'){
         		layer.confirm('您确定恢复这条数据么',{ icon: 3}, function(index){
-        			console.log(obj);
         			var sPostID = data.sPostID;
         			$.ajax({
         				type:'POST',

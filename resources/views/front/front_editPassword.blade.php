@@ -147,7 +147,8 @@
 							$.dialog({
 								title:'',
 							    content: '<div style="text-align:center">修改成功！</div>',
-							});
+							}); 
+							location.reload();
 						}else{
 							$.dialog({
 								title:'',

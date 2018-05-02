@@ -27,7 +27,7 @@
 			</div>
 			<div class="form-group">
 				<div class="col-sm-12">
-					<button class="btn btn-primary submit-btn" id="topicSubmit"> <i class="fa fa-paper-plane"></i> 发布文章</button>
+					<button class="btn btn-primary submit-btn" id="topicSubmit"> <i class="fa fa-paper-plane"></i> 发布链接</button>
 					
 				</div>
 			</div>

@@ -18,8 +18,16 @@
 // 初始页面第一个路由
 Route::get('/','Front\IndexController@store');
 
+// 分页
+Route::get('/page/{page}','Front\IndexController@page');
+
 // 我的动态
 Route::get('/myAbout','Front\IndexController@myAboutStore');
+// 查询
+Route::post('search','Front\IndexController@search');
+
+// 查看用户的个人中心
+Route::get('/view/personal/{sUserID}','Front\IndexController@personal');
 
 
 // 前台页面路由
@@ -45,6 +53,8 @@ Route::get('/personal/center','Front\PersonalController@store');
 Route::get('/personal/postsList/{sUserID}','Front\PersonalController@postsList');
 // 链接列表
 Route::get('/personal/linksList/{sUserID}','Front\PersonalController@linksList');
+// 回复列表
+Route::get('/personal/replysList/{sUserID}','Front\PersonalController@replysList');
 // 查看个人post
 Route::get('/personal/post/{sPostID}','Front\PersonalController@postView');
 // 删除帖子
@@ -54,6 +64,11 @@ Route::get('/topics/edit','Front\PersonalController@postsEdit');
 
 // 查看链接
 Route::get('/personal/link/{sPostID}','Front\PersonalController@linkView');
+
+// 查看回复
+Route::get('/personal/reply/{sReplyID}','Front\PersonalController@replyView');
+// 删除回复
+Route::post('/reply/delete','Front\PersonalController@replyDelete');
 
 // 点赞
 Route::post('/topics/praise','Front\PersonalController@praise');
@@ -93,6 +108,9 @@ Route::get('/links/share/{sPostID?}','Front\PostController@linksStore');
 // 保存链接
 Route::post('/links/save','Front\PostController@linksSave');
 
+// 编辑回复
+Route::get('/reply/edit/{sReplyID?}','Front\PostController@replyStore');
+
 
 
 
@@ -105,13 +123,18 @@ Route::get('admin_login',function(){
 });
 // 验证用户名密码
 Route::post('/admin/login','Admin\LoginController@check');
-// Route::get('/admin/login','Admin\LoginController@check');
+Route::get('/admin/login','Admin\LoginController@check');
 
 // 管理员基本信息填写
 Route::get('/basicInfo','Admin\UserInfoController@bind');
 
+// 安全设置
+Route::get('/setting','Admin\UserInfoController@setting');
+// 修改密码
+Route::post('/password/edit','Admin\UserInfoController@passwordEdit');
+
 // 退出登录
-Route::get('/logout','Admin\UserInfoController@logout');
+Route::post('/logout','Admin\UserInfoController@logout');
 
 // 管理员信息保存
 Route::group(['prefix' => 'ajax'], function(){
@@ -135,10 +158,14 @@ Route::get('/postList','Admin\PostController@store');
 // Route::post('/table/post','Admin\PostController@table');
 Route::get('/table/post','Admin\PostController@table');
 
-// table查看
-// Route::post('/post/view','Admin\PostController@view');
+
 // table删除
 Route::post('/post/del','Admin\PostController@del');
+// table 帖子查看
+Route::get('/post/view/{sPostID}','Admin\PostController@view');
+
+// table 回复查看
+Route::get('/reply/view/{sReplyID}','Admin\PostController@replyView');
 
 // 回复管理
 Route::get('/reply','Admin\ReplyController@store');
@@ -180,3 +207,22 @@ Route::get('/manager','Admin\ManagerController@store');
 Route::get('/manager/table','Admin\ManagerController@table');
 // 管理员添加
 Route::post('/manager/edit','Admin\ManagerController@edit');
+
+// 扩展管理
+// 友情链接初始化
+Route::get('/frind/links','Admin\ExtendController@linkStore');
+// 友情链接填充表格
+Route::get('/link/table','Admin\ExtendController@linkTable');
+// 添加链接
+Route::post('/link/save','Admin\ExtendController@linkSave');
+// 修改链接
+Route::post('/link/edit','Admin\ExtendController@linkEdit');
+// 删除链接
+Route::post('/link/del','Admin\ExtendController@linkDel');
+
+// 推荐资源
+Route::get('/recom/resource','Admin\ExtendController@resourceStore');
+// 推荐资源填充
+Route::get('/resource/table','Admin\ExtendController@resourceTable');
+// 推荐资源保存
+Route::post('/resource/save','Admin\ExtendController@resourceSave');
