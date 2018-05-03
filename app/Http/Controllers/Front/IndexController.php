@@ -57,6 +57,7 @@ class IndexController extends Controller
     // 搜索功能
     public function search(Request $request){
         $keyWords = $request->input("search");
+        $keyWords = trim($keyWords);
 
         // 查询出用户
         $users = DB::table('userinfo')

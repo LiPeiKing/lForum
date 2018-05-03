@@ -298,24 +298,6 @@
 						</div>
 					@endif
 
-
-					<!-- 友情链接 -->
-					<div class="panel panel-default">
-						<div class="panel-heading text-center" style="background-color: #ffffff !important;">
-							<h3 class="panel-title">友情链接</h3>
-						</div>
-						<div class="panel-body text-center">
-							@if(!empty($links))
-								@foreach($links as $link)
-									<a href="{{$link->sLinkAddress}}" target="_blank" rel="nofollow" title="{{$link->sLinkName}}" style="padding: 3px;line-height: 40px;">
-										<img src="{{$link->sLinkImg}}" style="width:150px; margin: 3px 0;">
-									</a>
-								@endforeach
-							@endif
-							
-
-						</div>
-					</div>
 					<!-- 推荐资源 -->
 					<div class="panel panel-default">
 						<div class="panel-heading text-center" style="background-color: #ffffff !important;">
@@ -337,6 +319,39 @@
 							</ul>
 						</div>
 					</div>
+					<!-- 友情链接 -->
+					<div class="panel panel-default">
+						<div class="panel-heading text-center" style="background-color: #ffffff !important;">
+							<h3 class="panel-title">友情链接</h3>
+						</div>
+						<div class="panel-body text-center">
+							@if(!empty($links))
+								@foreach($links as $link)
+									<a href="{{$link->sLinkAddress}}" target="_blank" rel="nofollow" title="{{$link->sLinkName}}" style="padding: 3px;line-height: 40px;">
+										<img src="{{$link->sLinkImg}}" style="width:110px; margin: 3px 0;">
+									</a>
+								@endforeach
+							@endif
+							
+
+						</div>
+					</div>
+					
+
+					<div class="panel panel-default">
+						<div class="panel-heading text-center" style="background-color: #ffffff !important;">
+							<h3 class="panel-title">论坛源码</h3>
+						</div>
+						<div class="panel-body text-center">
+							<ul class="list list-group" id="sidebar-resources">
+								<a href="https://github.com/LiPeiKing/lForum" target="_blank" rel="nofollow" title="GitHub地址" style="padding: 3px;line-height: 40px;">
+										<img src="{{asset('./front/images/logo.jpg')}}" style="width:110px; margin: 3px 0;">
+									</a>
+							</ul>
+						</div>
+					</div>
+
+
 				</div>
 			@show
 		</div>

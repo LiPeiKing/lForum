@@ -116,13 +116,7 @@
 
 
 	<div class="panel-footer">
-      	<ul class="pagination">
-        
-            <li class="disabled"><span>«</span></li>
-                      
-            <li><a href="https://laravel-china.org/search?q=null&amp;page=2" rel="next">»</a></li>
-        </ul>
-
+      	
   </div>
 
 </div>
