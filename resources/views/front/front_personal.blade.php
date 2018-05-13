@@ -196,7 +196,7 @@ span.timeago {
 				<ul class="list-group">
 					@foreach($replys as $reply)
 					<li class="list-group-item"> 对
-						<a href="/personal/link/{{$reply->sReplyID}}" title="{{$reply->sPostTitle}}的回复" class="">
+						<a href="/personal/reply/{{$reply->sReplyID}}" title="{{$reply->sPostTitle}}的回复" class="">
 							{{$reply->sPostTitle}}
 						</a>的回复
 						<span class="meta pull-right">

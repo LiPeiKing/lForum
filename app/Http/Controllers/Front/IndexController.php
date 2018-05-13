@@ -11,6 +11,7 @@ use App\Admin\UserInfo;
 use App\Admin\UserNum;
 use App\Admin\Reply;
 use App\Admin\Link;
+use App\Admin\PostType;
 use DB;
 
 
@@ -25,16 +26,18 @@ class IndexController extends Controller
     				->select('post.sPostID','post.sPostTypeID','post.sUserID','post.sTitle','post.iType','post.sAuthor','post.dCreateTime','userinfo.sUserID','userinfo.sLoginName')
                     ->orderby('post.dCreateTime','desc')
                     ->where('iDelete','=','0')
-                    ->take(10)
+                    ->take(9)
     				->get();
         $count = Post::where('iDelete','=','0')->count();
 
-        $links = Link::where('iType','=','1')->get();
+        $firendLinks = Link::where('iType','=','1')->get();
 
         $resources = Link::where('iType','=','2')->get();
 
+        $postTypes = PostType::all();
 
-    	return view('front.front_index',['postall' => $postall,'count' => $count,'links' => $links,'resources' => $resources]);
+
+    	return view('front.front_index',['postall' => $postall,'count' => $count,'firendLinks' => $firendLinks,'resources' => $resources,'postTypes' => $postTypes]);
     }
 
     //我的动态页面初始化
@@ -47,11 +50,16 @@ class IndexController extends Controller
                     ->orderby('post.dCreateTime','desc')
                     ->where('iDelete','=','0')
                     ->where('userinfo.sUserID',$sUserID)
+                    ->take(9)
                     ->get();
-        $links = Link::where('iType','=','1')->get();
+        $firendLinks = Link::where('iType','=','1')->get();
+
+        $count = Post::where('iDelete','=','0')->where('sUserID',$sUserID)->count();
+
+        $postTypes = PostType::all();
 
         $resources = Link::where('iType','=','2')->get();
-        return view('front.front_index',['personalPosts' => $personalPosts,'links' => $links,'resources' => $resources]);
+        return view('front.front_index',['personalPosts' => $personalPosts,'firendLinks' => $firendLinks,'resources' => $resources,'postTypes' => $postTypes,'personal'=>'personal','count' =>$count]);
     } 
 
     // 搜索功能
@@ -159,23 +167,189 @@ class IndexController extends Controller
     }
 
     // 分页
-    public function page(Request $request,$page){
-        $page = $page-1;
-        $postall = DB::table('post')
-                ->leftjoin('userinfo','post.sUserID','=','userinfo.sUserID')
-                ->select('post.sPostID','post.sPostTypeID','post.sUserID','post.sTitle','post.iType','post.sAuthor','post.dCreateTime','userinfo.sUserID','userinfo.sLoginName')
-                ->orderby('post.dCreateTime','desc')
-                ->where('iDelete','=','0')
-                ->skip(10*$page)
-                ->take(10)
-                ->get();
-        $links = Link::where('iType','=','1')->get();
+    public function page(Request $request,$page,$viewType,$type){
+        $sUserID = $request->session()->get('sUserID');
+        if($viewType =='all'){
+            if($type=='0'){
+                $page = $page-1;
+                $postall = DB::table('post')
+                        ->leftjoin('userinfo','post.sUserID','=','userinfo.sUserID')
+                        ->select('post.sPostID','post.sPostTypeID','post.sUserID','post.sTitle','post.iType','post.sAuthor','post.dCreateTime','userinfo.sUserID','userinfo.sLoginName')
+                        ->orderby('post.dCreateTime','desc')
+                        ->where('iDelete','=','0')
+                        ->skip(9*$page)
+                        ->take(9)
+                        ->get();
+                $firendLinks = Link::where('iType','=','1')->get();
 
-        $resources = Link::where('iType','=','2')->get();
-        $count = Post::where('iDelete','=','0')->count();
-        $page = $page+1;
-        return view('front.front_index',['postall' => $postall,'count' => $count,'page' => $page,'links' => $links,'resources' => $resources]);
+                $resources = Link::where('iType','=','2')->get();
+                $count = Post::where('iDelete','=','0')
+                             ->count();
+                $page = $page+1;
+
+                $postTypes = PostType::all();
+
+                return view('front.front_index',['postall' => $postall,'count' => $count,'page' => $page,'firendLinks' => $firendLinks,'resources' => $resources,'postTypes'=> $postTypes]);
+
+            }else{
+                $page = $page-1;
+                $postall = DB::table('post')
+                        ->leftjoin('userinfo','post.sUserID','=','userinfo.sUserID')
+                        ->select('post.sPostID','post.sPostTypeID','post.sUserID','post.sTitle','post.iType','post.sAuthor','post.dCreateTime','userinfo.sUserID','userinfo.sLoginName')
+                        ->orderby('post.dCreateTime','desc')
+                        ->where('iDelete','=','0')
+                        ->where('sPostTypeID',$type)
+                        ->skip(9*$page)
+                        ->take(9)
+                        ->get();
+                $firendLinks = Link::where('iType','=','1')->get();
+
+                $resources = Link::where('iType','=','2')->get();
+                $count = Post::where('iDelete','=','0')
+                             ->where('sPostTypeID',$type)
+                             ->count();
+                // $count=0;
+                $page = $page+1;
+
+                $postTypes = PostType::all();
+
+                return view('front.front_index',['postall' => $postall,'count' => $count,'page' => $page,'firendLinks' => $firendLinks,'resources' => $resources,'postTypes'=> $postTypes]);
+            }
             
+        }else{
+            if($type=='0'){
+                $page = $page-1;
+                $postall = DB::table('post')
+                        ->leftjoin('userinfo','post.sUserID','=','userinfo.sUserID')
+                        ->select('post.sPostID','post.sPostTypeID','post.sUserID','post.sTitle','post.iType','post.sAuthor','post.dCreateTime','userinfo.sUserID','userinfo.sLoginName')
+                        ->orderby('post.dCreateTime','desc')
+                        ->where('iDelete','=','0')
+                        ->where('userinfo.sUserID',$sUserID)
+                        ->skip(9*$page)
+                        ->take(9)
+                        ->get();
+                $links = Link::where('iType','=','1')->get();
 
+                $resources = Link::where('iType','=','2')->get();
+                $count = Post::where('iDelete','=','0')
+                             ->where('sUserID',$sUserID)
+                             ->count();
+                $page = $page+1;
+
+                $postTypes = PostType::all();
+
+                return view('front.front_index',['postall' => $postall,'count' => $count,'page' => $page,'links' => $links,'resources' => $resources,'postTypes'=> $postTypes]);
+            }else{
+                $page = $page-1;
+                $postall = DB::table('post')
+                        ->leftjoin('userinfo','post.sUserID','=','userinfo.sUserID')
+                        ->select('post.sPostID','post.sPostTypeID','post.sUserID','post.sTitle','post.iType','post.sAuthor','post.dCreateTime','userinfo.sUserID','userinfo.sLoginName')
+                        ->orderby('post.dCreateTime','desc')
+                        ->where('iDelete','=','0')
+                        ->where('sPostTypeID',$type)
+                        ->where('userinfo.sUserID',$sUserID)
+                        ->skip(9*$page)
+                        ->take(9)
+                        ->get();
+                $links = Link::where('iType','=','1')->get();
+
+                $resources = Link::where('iType','=','2')->get();
+                $count = Post::where('iDelete','=','0')
+                             ->where('sUserID',$sUserID)
+                             ->where('sPostTypeID',$type)
+                             ->count();
+                // $count=0;
+                $page = $page+1;
+
+                $postTypes = PostType::all();
+
+                return view('front.front_index',['postall' => $postall,'count' => $count,'page' => $page,'links' => $links,'resources' => $resources,'postTypes'=> $postTypes]);
+            }
+        }
+        
+    }
+
+    // 分类查看全部
+    public function typeView(Request $request,$type){
+        if($type == "link"){
+            $postall = DB::table('post')
+                    ->leftjoin('userinfo','post.sUserID','=','userinfo.sUserID')
+                    ->select('post.sPostID','post.sPostTypeID','post.sUserID','post.sTitle','post.iType','post.sAuthor','post.dCreateTime','userinfo.sUserID','userinfo.sLoginName')
+                    ->orderby('post.dCreateTime','desc')
+                    ->where('iDelete','=','0')
+                    ->where('iType','=','2')
+                    ->take(9)
+                    ->get();
+            $count = Post::where('iDelete','=','0')->where('iType','=','2')->count();
+
+            $firendLinks = Link::where('iType','=','1')->get();
+
+            $resources = Link::where('iType','=','2')->get();
+
+            $postTypes = PostType::all();
+            return view('front.front_index',['postall' => $postall,'count' => $count,'firendLinks' => $firendLinks,'resources' => $resources,'postTypes' => $postTypes,'type'=>$type]);
+        }else{
+            $postall = DB::table('post')
+                    ->leftjoin('userinfo','post.sUserID','=','userinfo.sUserID')
+                    ->select('post.sPostID','post.sPostTypeID','post.sUserID','post.sTitle','post.iType','post.sAuthor','post.dCreateTime','userinfo.sUserID','userinfo.sLoginName')
+                    ->orderby('post.dCreateTime','desc')
+                    ->where('iDelete','=','0')
+                    ->where('iType','=','1')
+                    ->where('sPostTypeID',$type)
+                    ->take(9)
+                    ->get();
+            $count = Post::where('iDelete','=','0')->where('sPostTypeID',$type)->count();
+
+            $firendLinks = Link::where('iType','=','1')->get();
+
+            $resources = Link::where('iType','=','2')->get();
+
+            $postTypes = PostType::all();
+            return view('front.front_index',['postall' => $postall,'count' => $count,'firendLinks' => $firendLinks,'resources' => $resources,'postTypes' => $postTypes,'type'=>$type]);
+        }
+        
+    }
+    // 分类查看个人
+    public function typeViewPersonal(Request $request,$type){
+        $sUserID = $request->session()->get('sUserID');
+        if($type == "link"){
+            $personalPosts = DB::table('post')
+                    ->leftjoin('userinfo','post.sUserID','=','userinfo.sUserID')
+                    ->select('post.sPostID','post.sPostTypeID','post.sUserID','post.sTitle','post.iType','post.sAuthor','post.dCreateTime','userinfo.sUserID','userinfo.sLoginName')
+                    ->orderby('post.dCreateTime','desc')
+                    ->where('iDelete','=','0')
+                    ->where('iType','=','2')
+                    ->where('userinfo.sUserID',$sUserID)
+                    ->take(9)
+                    ->get();
+            $count = Post::where('iDelete','=','0')->where('iType','=','2')->where('sUserID',$sUserID)->count();
+
+            $firendLinks = Link::where('iType','=','1')->get();
+
+            $resources = Link::where('iType','=','2')->get();
+
+            $postTypes = PostType::all();
+            return view('front.front_index',['personalPosts' => $personalPosts,'count' => $count,'firendLinks' => $firendLinks,'resources' => $resources,'postTypes' => $postTypes,'type'=>$type,'personal' => 'personal']);
+        }else{
+            $personalPosts = DB::table('post')
+                    ->leftjoin('userinfo','post.sUserID','=','userinfo.sUserID')
+                    ->select('post.sPostID','post.sPostTypeID','post.sUserID','post.sTitle','post.iType','post.sAuthor','post.dCreateTime','userinfo.sUserID','userinfo.sLoginName')
+                    ->orderby('post.dCreateTime','desc')
+                    ->where('iDelete','=','0')
+                    ->where('iType','=','1')
+                    ->where('sPostTypeID',$type)
+                    ->where('userinfo.sUserID',$sUserID)
+                    ->take(9)
+                    ->get();
+            $count = Post::where('iDelete','=','0')->where('sPostTypeID',$type)->where('sUserID',$sUserID)->count();
+
+            $firendLinks = Link::where('iType','=','1')->get();
+
+            $resources = Link::where('iType','=','2')->get();
+
+            $postTypes = PostType::all();
+            return view('front.front_index',['personalPosts' => $personalPosts,'count' => $count,'firendLinks' => $firendLinks,'resources' => $resources,'postTypes' => $postTypes,'type'=>$type,'personal' => 'personal']);
+        }
+        
     }
 }

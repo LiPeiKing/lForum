@@ -19,12 +19,16 @@
 Route::get('/','Front\IndexController@store');
 
 // 分页
-Route::get('/page/{page}','Front\IndexController@page');
+Route::get('/page/{page}/{viewType}/{type}','Front\IndexController@page');
 
 // 我的动态
 Route::get('/myAbout','Front\IndexController@myAboutStore');
 // 查询
 Route::post('search','Front\IndexController@search');
+
+// 分类查询
+Route::get('typeView/{type}','Front\IndexController@typeView');
+Route::get('typeViewPersonal/{type}','Front\IndexController@typeViewPersonal');
 
 // 查看用户的个人中心
 Route::get('/view/personal/{sUserID}','Front\IndexController@personal');

@@ -169,8 +169,8 @@
 				<div class="col-md-9 main-col">
 					<div class="panel panel-default">
 						<div class="panel-heading" style="background-color: #ffffff !important;border:none;margin-bottom: -18px">
-							<ul class="nav nav-tabs">
-								@if(isset($personalPosts))
+							<ul class="nav nav-tabs" id="dongtai">
+								@if(!empty($personal))
 
 									<li role="presentation" class=""><a href="/"><i class="glyphicon glyphicon-cloud" aria-hidden="true"></i> 所有动态</a></li>
 										<li role="presentation" class="active" id="myAbout"><a href="/myAbout"><i class="glyphicon glyphicon-user" aria-hidden="true"></i> 我的动态</a></li>
@@ -182,6 +182,31 @@
 									
 								@endif
 								
+								<li class="pull-right" id="postType">
+									<select class="form-control">
+										<option value="0">请选择分类</option>
+										@if(!empty($postTypes))
+											@foreach($postTypes as $postType)
+												@if(!empty($type))
+													@if($postType->id == $type)
+														<option value="{{$postType->id}}" selected="selected">{{$postType->sName}}</option>
+													@else 
+														<option value="{{$postType->id}}">{{$postType->sName}}</option>
+													@endif
+												@else
+													<option value="{{$postType->id}}">{{$postType->sName}}</option>
+												@endif
+											@endforeach
+										@endif
+										@if(!empty($type))
+											@if($type == "link")
+												<option value="link" selected="selected">链接</option>
+											@endif
+
+										@endif
+										<option value="link">链接</option>
+									</select>
+								</li>
 								
 							</ul>
 						</div>
@@ -325,15 +350,13 @@
 							<h3 class="panel-title">友情链接</h3>
 						</div>
 						<div class="panel-body text-center">
-							@if(!empty($links))
-								@foreach($links as $link)
+							@if(!empty($firendLinks))
+								@foreach($firendLinks as $link)
 									<a href="{{$link->sLinkAddress}}" target="_blank" rel="nofollow" title="{{$link->sLinkName}}" style="padding: 3px;line-height: 40px;">
 										<img src="{{$link->sLinkImg}}" style="width:110px; margin: 3px 0;">
 									</a>
 								@endforeach
 							@endif
-							
-
 						</div>
 					</div>
 					
@@ -358,15 +381,41 @@
 	</div>
 
 	<input type="hidden" id="hidsLoginID" value="{{Session::get('sUserID')}}">
-
+	@if (!empty($personal))
+		<input type="hidden" id="hidDongtai" value="{{'geren'}}">
+	@else 
+		<input type="hidden" id="hidDongtai" value="{{'all'}}">
+	@endif
 
 </body>
 <script>
 	$(function(){
 
+		// 分类查询
+		$("#postType select").change(function(){
+			if($("#hidDongtai").val() == "geren"){
+				var tmpValue = $(this).val();
+				if(tmpValue == '0'){
+					location.href = "/myAbout";
+				}else{
+					location.href = "/typeViewPersonal/"+tmpValue;
+				}
+			}else{
+				var tmpValue = $(this).val();
+				if(tmpValue == '0'){
+					location.href = "/";
+				}else{
+					location.href = "/typeView/"+tmpValue;
+				}
+			}
+			
+		});
+
+		// 分页插件
 		$("#pag").jqPaginator({
-	      	totalCounts:{{$count or '10'}},
-	      	pageSize:10,
+	      	// totalCounts:{{$count or '9'}},
+	      	totalCounts: {{$count or 9}},
+	      	pageSize:9,
 		    // disableClass:'disabled',
 		    currentPage: {{$page or 1}},
 	      	first: '<li class="first"><a href="javascript:void(0);">首页</a></li>',
@@ -376,7 +425,9 @@
 	      		// console.log(num);
 	      		// console.log(type);
 	      		if(type != "init"){
-	      			location.href = "/page/"+num;
+	      			var tmpValue = $("#hidDongtai").val();
+	      			var tmpType = $("#postType select option:selected").val();
+	      			location.href = "/page/"+num+'/'+tmpValue+'/'+tmpType;
 
 	      		}
 
@@ -397,11 +448,6 @@
 				// 	}
 
 				// });
-
-
-
-
-
 
 	      	}
 		});
