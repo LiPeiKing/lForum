@@ -26,26 +26,32 @@ class CheckController extends Controller
     	$users = UserInfo::where('sLoginName',$sLoginName)
     					 ->first();
     	if(!empty($users)){
-    		if($users->sPassword == $sPassword){
-    			// 登录成功
-    			// 是否是注册成功第一次登陆
-    			if($users->sAlias == '0'){
-    				$request->session()->put('sLoginName',$users->sLoginName);
-    				$request->session()->put('sRole','普通用户');
-                    $request->session()->put('sUserID',$users->sUserID);
-                    $request->session()->put('sUserName',$users->sUserName);
+            if($users->iState == "1"){
+                $msg = "3";
+                return view('front.front_login',['msg' => $msg,'sLoginName' => $sLoginName]);
+            }else{
+                if($users->sPassword == $sPassword){
+                    // 登录成功
+                    // 是否是注册成功第一次登陆
+                    if($users->sAlias == '0'){
+                        $request->session()->put('sLoginName',$users->sLoginName);
+                        $request->session()->put('sRole','普通用户');
+                        $request->session()->put('sUserID',$users->sUserID);
+                        $request->session()->put('sUserName',$users->sUserName);
 
-    				return redirect("/");
-    			}else{
-    				$msg = "1";
-    				return view('front.front_login',['msg' => $msg]);
-    			}
-    			
-    		}else{
-    			// 密码错误
-    			$msg = "2";
-    			return view('front.front_login',['msg' => $msg,'sLoginName' => $sLoginName]);
-    		}
+                        return redirect("/");
+                    }else{
+                        $msg = "1";
+                        return view('front.front_login',['msg' => $msg]);
+                    }   
+                }else{
+                    // 密码错误
+                    $msg = "2";
+                    return view('front.front_login',['msg' => $msg,'sLoginName' => $sLoginName]);
+                }
+            }
+
+    		
     	}else{
     		// 用户名不存在
     		$msg = "0";

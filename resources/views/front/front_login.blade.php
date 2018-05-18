@@ -99,6 +99,9 @@
 			}else if(msg == "2"){
 				$("#warn").attr("class","alert alert-warning alert-dismissible");
 				$("#warn").text("密码错误！");
+			}else if(msg == "3"){
+				$("#warn").attr("class","alert alert-warning alert-dismissible");
+				$("#warn").text("您已违反论坛公约！请联系管理员微信my1640013955");
 			}else {
 				$("#warn").attr("class","alert alert-warning alert-dismissible");
 				$("#warn").text("用户名不存在！");

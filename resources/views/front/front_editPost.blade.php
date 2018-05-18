@@ -123,7 +123,7 @@
 	//定义函数
       function forbiddenStr(str){
       	//定义敏感字符
- 		  var forbiddenArray =['xx','黄色','fuck','tmd','他妈的','李愚蠢','中国猪','台湾猪','进化不完全的生命体','贱人','装b','大sb','傻逼','傻b','煞逼','煞笔','刹笔','傻比','沙比','欠干','婊子养的','我日你','我操','我草','卧艹','卧槽','爆你菊','艹你','cao你','cao你ma','cao你吗','cao你妈','草拟吗','娘西皮','sb','贱货','人渣','按摩','高潮','呻吟','脱光','警察我们是为人民服务的','领导干部吃王八','孟玉'];
+ 		  var forbiddenArray =['xx','黄色','fuck','tmd','他妈的','李愚蠢','中国猪','台湾猪','进化不完全的生命体','贱人','装b','大sb','傻逼','傻b','煞逼','煞笔','刹笔','傻比','沙比','欠干','婊子养的','我日你','我操','我草','卧艹','卧槽','爆你菊','艹你','cao你','cao你ma','cao你吗','cao你妈','草拟吗','娘西皮','sb','贱货','人渣','按摩','高潮','呻吟','脱光','警察我们是为人民服务的','领导干部吃王八','孟玉','色情','激情网','激情'];
           var re = '';
           for(var i=0;i<forbiddenArray.length;i++){
               if(i==forbiddenArray.length-1)
@@ -162,7 +162,7 @@
 	            sPostID:sPostID
 	        };
 	        
- 		    if(!forbiddenStr(sContent)){
+ 		    if(!forbiddenStr(sContent) || !forbiddenStr(sTitle)){
  		    	$.dialog({
 					title:'',
 					content: '<div style="text-align:center">含有敏感词不能发布！请注意您的言辞！</div>',
