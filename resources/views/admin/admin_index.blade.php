@@ -68,8 +68,8 @@
 		        	<dl class="layui-nav-child">
 		        		<dd><a href="/frind/links">友情链接</a></dd>
 		        		<dd><a href="/recom/resource">推荐资源</a></dd>
-		        		<dd><a href="javascript:;">论坛公告</a></dd>
-		        		<dd><a href="javascript:;">论坛信息</a></dd>
+		        		<!-- <dd><a href="javascript:;">论坛公告</a></dd>
+		        		<dd><a href="javascript:;">论坛信息</a></dd> -->
 
 		        	</dl>
 		        </li>

@@ -16,7 +16,7 @@ class ExtendController extends Controller
     //友情链接页面初始化
     public function linkStore(){
 
-    	return view('Admin.admin_frindLinks');
+    	return view('admin.admin_frindLinks');
     }
 
     // table 表格数据填充

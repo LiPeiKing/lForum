@@ -202,10 +202,11 @@
 										@if(!empty($type))
 											@if($type == "link")
 												<option value="link" selected="selected">链接</option>
+											@else 
+												<option value="link">链接</option>
 											@endif
-
+										
 										@endif
-										<option value="link">链接</option>
 									</select>
 								</li>
 								

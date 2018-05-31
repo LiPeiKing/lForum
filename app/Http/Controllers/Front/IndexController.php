@@ -37,7 +37,7 @@ class IndexController extends Controller
         $postTypes = PostType::all();
 
 
-    	return view('front.front_index',['postall' => $postall,'count' => $count,'firendLinks' => $firendLinks,'resources' => $resources,'postTypes' => $postTypes]);
+    	return view('front.front_index',['postall' => $postall,'count' => $count,'firendLinks' => $firendLinks,'resources' => $resources,'postTypes' => $postTypes,'type'=>'s']);
     }
 
     //我的动态页面初始化
@@ -59,7 +59,7 @@ class IndexController extends Controller
         $postTypes = PostType::all();
 
         $resources = Link::where('iType','=','2')->get();
-        return view('front.front_index',['personalPosts' => $personalPosts,'firendLinks' => $firendLinks,'resources' => $resources,'postTypes' => $postTypes,'personal'=>'personal','count' =>$count]);
+        return view('front.front_index',['personalPosts' => $personalPosts,'firendLinks' => $firendLinks,'resources' => $resources,'postTypes' => $postTypes,'personal'=>'personal','count' =>$count,'type' => 's']);
     } 
 
     // 搜索功能
